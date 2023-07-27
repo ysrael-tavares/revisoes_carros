@@ -165,8 +165,23 @@ export default {
                                         <td class="px-6 py-4">
                                             {{owner.age}} Anos
                                         </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <button type="button" @click="editOwner(owner)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Editar</button>
+                                        <td class="px-6 py-4 text-right flex justify-between">
+                                            <button
+                                                type="button"
+                                                @click="editOwner(owner)"
+                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                                title="Editar Proprietário"
+                                            >
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                @click="editOwner(owner)"
+                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                                title="Cadastrar Carro"
+                                            >
+                                                <i class="fa-solid fa-car"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
