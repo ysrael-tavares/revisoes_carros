@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -27,10 +28,20 @@ Route::middleware('auth')->group(callback: function (){
         return Inertia::render('Owners');
     })->name('proprietarios');
 
+    Route::get('/marcas', function () {
+        return Inertia::render('Brand');
+    })->name('marcas');
+
     Route::controller(OwnerController::class)->group(function (){
         Route::get('/owner', 'index')->name('owner.all');
         Route::post('/owner', 'store')->name('owner.store');
         Route::patch('/owner/{owner}', 'update')->name('owner.update');
+    });
+
+    Route::controller(BrandController::class)->group(function (){
+        Route::get('/brand', 'index')->name('brand.all');
+        Route::post('/brand', 'store')->name('brand.store');
+        Route::patch('/brand/{brand}', 'update')->name('brand.update');
     });
 
     Route::controller(ProfileController::class)->group(function (){
