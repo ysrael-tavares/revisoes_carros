@@ -7,6 +7,7 @@ import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
 import Modal from "@/Components/Modal.vue";
+import ModalNewCar from "@/Partials/ModalNewCar.vue";
 
 const ownerDefault = {
     name: '',
@@ -32,15 +33,17 @@ export default {
             alert: "",
             ownersList: [],
             showModal: false,
+            showModalCar: false,
         }
     },
     components: {
+        ModalNewCar,
         Modal,
         InputSuccess,
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
-        sendOwner(){ // Metodo para envio de proprietário
+        sendOwner() { // Metodo para envio de proprietário
 
             this.clearAlerts()
 
@@ -70,26 +73,33 @@ export default {
                     this.getOwners()
                 })
         },
-        getOwners(){ // Metódo para atualizar lista de proprietários
+        getOwners() { // Metódo para atualizar lista de proprietários
             axios
                 .get(route('owner.all'))
                 .then(response => {
                     this.ownersList = response.data
                 })
         },
-        editOwner(owner){ // Prepara a edição de um proprietário
+        editOwner(owner) { // Prepara a edição de um proprietário
             this.clearAlerts()
             this.owner = {...owner}
             this.showModal = true
         },
-        closeModal(){ // Fecha o modal e esvazia o proprietário
+        closeModal() { // Fecha o modal e esvazia o proprietário
             this.showModal = false
             this.owner = ownerDefault
         },
-        clearAlerts(){ // Esvazia os alertas
+        clearAlerts() { // Esvazia os alertas
             this.alert = ""
             this.errors = {}
-        }
+        },
+        newCar(owner) { // Prepara a edição de um proprietário
+            this.owner = {...owner}
+            this.showModalCar = true
+        },
+        closeModalCar() { // Fecha o modal e esvazia o proprietário
+            this.showModalCar = false
+        },
     },
     created(){
         this.getOwners()
@@ -176,7 +186,7 @@ export default {
                                             </button>
                                             <button
                                                 type="button"
-                                                @click="editOwner(owner)"
+                                                @click="newCar(owner)"
                                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                                 title="Cadastrar Carro"
                                             >
@@ -292,5 +302,7 @@ export default {
                 </form>
             </div>
         </Modal>
+
+        <ModalNewCar :showModal="showModalCar" :owner="owner" :closeModal="closeModalCar" />
     </AuthenticatedLayout>
 </template>

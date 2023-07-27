@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CarController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -25,7 +26,9 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(callback: function (){
     Route::get('/proprietarios', function () {
-        return Inertia::render('Owners');
+        return Inertia::render('Owners', [
+            'brands' => \App\Models\Brand::get()
+        ]);
     })->name('proprietarios');
 
     Route::get('/marcas', function () {
@@ -42,6 +45,12 @@ Route::middleware('auth')->group(callback: function (){
         Route::get('/brand', 'index')->name('brand.all');
         Route::post('/brand', 'store')->name('brand.store');
         Route::patch('/brand/{brand}', 'update')->name('brand.update');
+    });
+
+    Route::controller(CarController::class)->group(function (){
+        Route::get('/car', 'index')->name('car.all');
+        Route::post('/car', 'store')->name('car.store');
+        Route::patch('/car/{car}', 'update')->name('car.update');
     });
 
     Route::controller(ProfileController::class)->group(function (){
