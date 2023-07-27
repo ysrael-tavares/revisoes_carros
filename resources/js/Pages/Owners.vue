@@ -6,6 +6,7 @@ import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
+import Modal from "@/Components/Modal.vue";
 
 const ownerDefault = {
     name: '',
@@ -15,21 +16,26 @@ const ownerDefault = {
     phone: '',
 }
 
+const ownerExample = {
+    name: 'Fulano',
+    gender: 'Homem',
+    date_of_birth: '1998-09-20',
+    email: 'ysraeltavares33@gmail.com',
+    phone: '83923456789',
+}
+
 export default {
     data: () => {
         return {
-            owner: {
-                name: 'Fulano',
-                gender: 'Homem',
-                date_of_birth: '1998-09-20',
-                email: 'ysraeltavares33@gmail.com',
-                phone: '83923456789',
-            },
+            owner: ownerDefault,
             errors: {},
-            alert: ""
+            alert: "",
+            ownersList: [],
+            showModal: false,
         }
     },
     components: {
+        Modal,
         InputSuccess,
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
@@ -45,10 +51,22 @@ export default {
                     this.alert = response.data
                 })
                 .catch(erro => {
-                    console.log(erro.response)
                     this.errors = erro.response.data.errors
                 })
+                .finally(() => {
+                    this.getOwners()
+                })
+        },
+        getOwners(){
+            axios
+                .get(route('owner.all'))
+                .then(response => {
+                    this.ownersList = response.data
+                })
         }
+    },
+    created(){
+        this.getOwners()
     }
 }
 </script>
@@ -64,107 +82,174 @@ export default {
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <header>
-                            <h2 class="text-lg font-medium text-gray-900">Cadastro de Proprietários</h2>
+                    <div class="p-4 sm:p-8 bg-white shadow">
+                        <header class="flex justify-between">
+                            <div>
+                                <h2 class="text-lg font-medium text-gray-900">Lista de Proprietários</h2>
 
-                            <p class="mt-1 text-sm text-gray-600">
-                                Preencha o formulário e cadastre um novo proprietário
-                            </p>
+                                <p class="mt-1 text-sm text-gray-600">
+                                    Proprietários atuais
+                                </p>
+                            </div>
+                            <div>
+                                <PrimaryButton @click="showModal = true" type="button">
+                                    + Proprietário
+                                </PrimaryButton>
+                            </div>
                         </header>
-                        <form @submit.prevent="sendOwner" class="mt-6 space-y-6">
-                            <div>
-                                <InputLabel for="name" value="Nome" />
 
-                                <TextInput
-                                    id="name"
-                                    type="text"
-                                    class="mt-1 block w-full"
-                                    v-model="owner.name"
-                                    required
-                                    autofocus
-                                />
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
+                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Proprietário
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Homem/Mulher
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Email
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Telefone
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Idade
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            <span class="sr-only">Edit</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="owner in ownersList" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{owner.name}}
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            {{owner.gender}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{owner.email}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{owner.phone}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{owner.age}} Anos
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Editar</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-                                <InputError class="mt-2" :message="errors.name" />
-                            </div>
-
-                            <div>
-                                <InputLabel for="date_of_birth" value="Data de Nascimento" />
-
-                                <input
-                                    class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
-                                    id="date_of_birth"
-                                    type="date"
-                                    :max="new Date().toISOString().split('T')[0]"
-                                    v-model="owner.date_of_birth"
-                                    required
-                                />
-
-                                <InputError class="mt-2" :message="errors.date_of_birth" />
-                            </div>
-
-                            <div>
-                                <InputLabel for="gender" value="Homem/Mulher" />
-
-                                <select
-                                    id="gender"
-                                    class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                                    v-model="owner.gender"
-                                    required
-                                >
-                                    <option value="Homem">Homem</option>
-                                    <option value="Mulher">Mulher</option>
-                                </select>
-
-                                <InputError class="mt-2" :message="errors.gender" />
-                            </div>
-
-                            <div>
-                                <InputLabel for="phone" value="Telefone" />
-
-                                <TextInput
-                                    id="phone"
-                                    type="text"
-                                    class="mt-1 block w-full"
-                                    v-model="owner.phone"
-                                />
-
-                                <InputError class="mt-2" :message="errors.phone" />
-                            </div>
-
-                            <div>
-                                <InputLabel for="email" value="Email" />
-
-                                <TextInput
-                                    id="email"
-                                    type="email"
-                                    class="mt-1 block w-full"
-                                    v-model="owner.email"
-                                />
-
-                                <InputError class="mt-2" :message="errors.email" />
-                            </div>
-
-                            <div>
-                                <InputSuccess :message="alert" />
-                            </div>
-
-                            <div class="flex items-center gap-4">
-                                <PrimaryButton :disabled="owner.processing">Cadastrar</PrimaryButton>
-
-                                <Transition
-                                    enter-active-class="transition ease-in-out"
-                                    enter-from-class="opacity-0"
-                                    leave-active-class="transition ease-in-out"
-                                    leave-to-class="opacity-0"
-                                >
-                                    <p v-if="owner.recentlySuccessful" class="text-sm text-gray-600">Salvo</p>
-                                </Transition>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
+
+        <Modal :show="showModal">
+            <div class="p-4 sm:p-8 bg-white shadow">
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900">Cadastro de Proprietários</h2>
+
+                    <p class="mt-1 text-sm text-gray-600">
+                        Preencha o formulário e cadastre um novo proprietário
+                    </p>
+                </header>
+                <form @submit.prevent="sendOwner" class="mt-6 space-y-6">
+                    <div>
+                        <InputLabel for="name" value="Nome" />
+
+                        <TextInput
+                            id="name"
+                            type="text"
+                            class="mt-1 block w-full"
+                            v-model="owner.name"
+                            required
+                            autofocus
+                        />
+
+                        <InputError class="mt-2" :message="errors.name" />
+                    </div>
+
+                    <div>
+                        <InputLabel for="date_of_birth" value="Data de Nascimento" />
+
+                        <input
+                            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                            id="date_of_birth"
+                            type="date"
+                            :max="new Date().toISOString().split('T')[0]"
+                            v-model="owner.date_of_birth"
+                            required
+                        />
+
+                        <InputError class="mt-2" :message="errors.date_of_birth" />
+                    </div>
+
+                    <div>
+                        <InputLabel for="gender" value="Homem/Mulher" />
+
+                        <select
+                            id="gender"
+                            class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            v-model="owner.gender"
+                            required
+                        >
+                            <option value="Homem">Homem</option>
+                            <option value="Mulher">Mulher</option>
+                        </select>
+
+                        <InputError class="mt-2" :message="errors.gender" />
+                    </div>
+
+                    <div>
+                        <InputLabel for="phone" value="Telefone" />
+
+                        <TextInput
+                            id="phone"
+                            type="text"
+                            class="mt-1 block w-full"
+                            v-model="owner.phone"
+                        />
+
+                        <InputError class="mt-2" :message="errors.phone" />
+                    </div>
+
+                    <div>
+                        <InputLabel for="email" value="Email" />
+
+                        <TextInput
+                            id="email"
+                            type="email"
+                            class="mt-1 block w-full"
+                            v-model="owner.email"
+                        />
+
+                        <InputError class="mt-2" :message="errors.email" />
+                    </div>
+
+                    <div>
+                        <InputSuccess :message="alert" />
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <PrimaryButton
+                            type="button"
+                            @click="showModal = false"
+                            class="bg-red-700 hover:bg-red-600">
+                            Cancelar
+                        </PrimaryButton>
+
+                        <PrimaryButton :disabled="owner.processing">Cadastrar</PrimaryButton>
+                    </div>
+                </form>
+            </div>
+        </Modal>
     </AuthenticatedLayout>
 </template>

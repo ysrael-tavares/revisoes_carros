@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,4 +17,11 @@ class Owner extends Model
         'email',
         'phone',
     ];
+
+    protected $appends = ['age'];
+
+    public function getAgeAttribute()
+    {
+        return Carbon::now()->diffInYears($this->date_of_birth);
+    }
 }

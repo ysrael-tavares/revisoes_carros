@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -21,20 +22,22 @@ Route::get('/', function () {
 });
 
 
-Route::middleware('auth')->group(function (){
+Route::middleware('auth')->group(callback: function (){
     Route::get('/proprietarios', function () {
         return Inertia::render('Owners');
     })->name('proprietarios');
-});
 
-Route::controller(\App\Http\Controllers\OwnerController::class)->group(function (){
-   Route::post('/new_owner', 'store')->name('owner.store');
-});
+    Route::controller(OwnerController::class)->group(function (){
+        Route::get('/owner', 'index')->name('owner.all');
+        Route::post('/owner', 'store')->name('owner.store');
+    });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::controller(ProfileController::class)->group(function (){
+        Route::get('/profile', 'edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+        Route::delete('/profile', 'destroy')->name('profile.destroy');
+    });
+
 });
 
 require __DIR__.'/auth.php';
