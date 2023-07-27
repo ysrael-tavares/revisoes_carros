@@ -30,6 +30,7 @@ Route::middleware('auth')->group(callback: function (){
     Route::controller(OwnerController::class)->group(function (){
         Route::get('/owner', 'index')->name('owner.all');
         Route::post('/owner', 'store')->name('owner.store');
+        Route::patch('/owner/{owner}', 'update')->name('owner.update');
     });
 
     Route::controller(ProfileController::class)->group(function (){

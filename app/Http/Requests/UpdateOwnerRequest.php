@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Owner;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateOwnerRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class UpdateOwnerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->hasUser();
     }
 
     /**
@@ -22,7 +24,11 @@ class UpdateOwnerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string'],
+            'gender' => ['required', 'string'],
+            'date_of_birth' => ['required', 'date', 'before:'.date('Y-m-d')],
+            'email' => ['required', 'email', Rule::unique('owners')->ignore($this->id)],
+            'phone' => ['required', 'string'],
         ];
     }
 }

@@ -57,7 +57,10 @@ class OwnerController extends Controller
      */
     public function update(UpdateOwnerRequest $request, Owner $owner)
     {
-        //
+        if($owner->update($request->validated()))
+            return response()->json('Proprietário Alterado', 201);
+
+        return response()->json('Erro ao alterar proprietário');
     }
 
     /**

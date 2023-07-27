@@ -40,15 +40,28 @@ export default {
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
-        sendOwner(){
-            this.alert = ""
-            this.errors = {}
+        sendOwner(){ // Metodo para envio de proprietário
 
-            axios
-                .post(route('owner.store'), this.owner)
+            this.clearAlerts()
+
+            // Verifica se é uma edição ou inserção
+            const request = this.owner.id
+                ? axios
+                    .patch(
+                        route('owner.update', {owner: this.owner.id}),
+                        this.owner
+                    )
+                : axios
+                    .post(
+                        route('owner.store'),
+                        this.owner
+                    )
+
+            // Processa a requisição
+            request
                 .then(response => {
-                    this.owner = ownerDefault
                     this.alert = response.data
+                    setTimeout(this.closeModal, 2000)
                 })
                 .catch(erro => {
                     this.errors = erro.response.data.errors
@@ -57,12 +70,25 @@ export default {
                     this.getOwners()
                 })
         },
-        getOwners(){
+        getOwners(){ // Metódo para atualizar lista de proprietários
             axios
                 .get(route('owner.all'))
                 .then(response => {
                     this.ownersList = response.data
                 })
+        },
+        editOwner(owner){ // Prepara a edição de um proprietário
+            this.clearAlerts()
+            this.owner = {...owner}
+            this.showModal = true
+        },
+        closeModal(){ // Fecha o modal e esvazia o proprietário
+            this.showModal = false
+            this.owner = ownerDefault
+        },
+        clearAlerts(){ // Esvazia os alertas
+            this.alert = ""
+            this.errors = {}
         }
     },
     created(){
@@ -140,7 +166,7 @@ export default {
                                             {{owner.age}} Anos
                                         </td>
                                         <td class="px-6 py-4 text-right">
-                                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Editar</a>
+                                            <button type="button" @click="editOwner(owner)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Editar</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -241,7 +267,7 @@ export default {
                     <div class="flex items-center gap-4">
                         <PrimaryButton
                             type="button"
-                            @click="showModal = false"
+                            @click="closeModal"
                             class="bg-red-700 hover:bg-red-600">
                             Cancelar
                         </PrimaryButton>
