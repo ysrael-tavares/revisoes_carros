@@ -8,8 +8,8 @@ defineProps({
 
 <template>
     <div v-show="message">
-        <p class="text-sm text-red-600">
-            {{ message?.join('|') }}
+        <p class="text-sm text-red-600" v-for="text in message">
+            {{ text }}
         </p>
     </div>
 </template>
