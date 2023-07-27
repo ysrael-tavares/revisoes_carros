@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Owner;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOwnerRequest extends FormRequest
@@ -25,7 +26,7 @@ class StoreOwnerRequest extends FormRequest
             'name' => ['required', 'string'],
             'gender' => ['required', 'string'],
             'date_of_birth' => ['required', 'date', 'before:'.date('Y-m-d')],
-            'email' => ['nullable', 'email', 'unique:owners,email'],
+            'email' => ['required', 'email', 'unique:'.Owner::class ],
             'phone' => ['required', 'string'],
         ];
     }

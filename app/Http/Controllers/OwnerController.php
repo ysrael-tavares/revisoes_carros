@@ -29,7 +29,11 @@ class OwnerController extends Controller
      */
     public function store(StoreOwnerRequest $request)
     {
-        //
+        $owner = Owner::create($request->validated());
+
+        if($owner) return response()->json('Proprietário inserido', 201);
+
+        return response()->json('Erro ao inserir proprietário');
     }
 
     /**

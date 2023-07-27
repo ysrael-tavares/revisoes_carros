@@ -7,9 +7,9 @@ defineProps({
 </script>
 
 <template>
-    <div v-show="message">
-        <p class="text-sm text-red-600">
-            {{ message?.join('|') }}
+    <div v-show="message" class="bg-green-100 py-3 px-3 rounded">
+        <p class="text-sm text-green-600">
+            {{ message }}
         </p>
     </div>
 </template>
