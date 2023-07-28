@@ -17,4 +17,14 @@ class Car extends Model
         'color',
         'year_of_manufacture',
     ];
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class);
+    }
 }

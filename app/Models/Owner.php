@@ -24,4 +24,9 @@ class Owner extends Model
     {
         return Carbon::now()->diffInYears($this->date_of_birth);
     }
+
+    public function cars()
+    {
+        return $this->hasMany(Car::class);
+    }
 }
