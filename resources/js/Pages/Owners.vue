@@ -94,7 +94,7 @@ export default {
                                     Proprietários atuais
                                 </p>
                             </div>
-                            <div class="flex justify-between items-center space-x-3">
+                            <div class="flex flex-col space-y-3 md:space-y-0 md:flex-row md:justify-between md:items-center md:space-x-3">
                                 <PrimaryButton @click="toggleView" type="button">
                                     {{ typeView == 'all' ? 'Classificar por Sexo' : 'Exibição Padrão' }}
                                 </PrimaryButton>
@@ -139,7 +139,7 @@ export default {
                                         <td class="px-6 py-4">
                                             {{owner.age}} Anos
                                         </td>
-                                        <td class="px-6 py-4 text-right flex justify-between">
+                                        <td class="px-6 py-4 text-right flex space-x-1">
                                             <button
                                                 type="button"
                                                 @click="editOwner(owner)"

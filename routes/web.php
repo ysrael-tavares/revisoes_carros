@@ -73,12 +73,6 @@ Route::middleware('auth')->group(callback: function (){
         Route::patch('/revision/{revision}', 'update')->name('revision.update');
     });
 
-    Route::controller(ProfileController::class)->group(function (){
-        Route::get('/profile', 'edit')->name('profile.edit');
-        Route::patch('/profile', 'update')->name('profile.update');
-        Route::delete('/profile', 'destroy')->name('profile.destroy');
-    });
-
 });
 
 require __DIR__.'/auth.php';

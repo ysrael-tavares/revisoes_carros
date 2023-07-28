@@ -140,7 +140,7 @@ export default {
                                         <TableData>
                                             {{car.revisions.length}}
                                         </TableData>
-                                        <td class="px-6 py-4 text-right flex justify-between">
+                                        <td class="px-6 py-4 text-right flex space-x-1">
                                             <button
                                                 type="button"
                                                 @click="editCar(car)"
