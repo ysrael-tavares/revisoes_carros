@@ -17,6 +17,18 @@ class OwnerController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     */
+    public function by_sex()
+    {
+        $owners = Owner::get()->groupBy('gender');
+
+        return response()->json($owners);
+    }
+
+
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

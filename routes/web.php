@@ -51,6 +51,8 @@ Route::middleware('auth')->group(callback: function (){
         Route::get('/owner', 'index')->name('owner.all');
         Route::post('/owner', 'store')->name('owner.store');
         Route::patch('/owner/{owner}', 'update')->name('owner.update');
+
+        Route::get('/owner_by_sex', 'by_sex')->name('owner.all_by_sex');
     });
 
     Route::controller(BrandController::class)->group(function (){
