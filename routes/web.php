@@ -4,6 +4,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RevisionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -57,6 +58,12 @@ Route::middleware('auth')->group(callback: function (){
         Route::get('/car', 'index')->name('car.all');
         Route::post('/car', 'store')->name('car.store');
         Route::patch('/car/{car}', 'update')->name('car.update');
+    });
+
+    Route::controller(RevisionController::class)->group(function (){
+        Route::get('/revision', 'index')->name('revision.all');
+        Route::post('/revision', 'store')->name('revision.store');
+        Route::patch('/revision/{revision}', 'update')->name('revision.update');
     });
 
     Route::controller(ProfileController::class)->group(function (){
