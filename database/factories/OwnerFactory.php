@@ -16,8 +16,18 @@ class OwnerFactory extends Factory
      */
     public function definition(): array
     {
+        $genderPortuguese = ['Homem', 'Mulher'];
+
+        $genderEnglish = ['male', 'female'];
+
+        $selected = rand(0,1);
+
         return [
-            //
+            'name' => $this->faker->name($genderEnglish[$selected]),
+            'gender' => $genderPortuguese[$selected],
+            'date_of_birth' => $this->faker->dateTimeBetween('-30 years', '-18 years'),
+            'email' => $this->faker->safeEmail(),
+            'phone' => $this->faker->phoneNumber(),
         ];
     }
 }
