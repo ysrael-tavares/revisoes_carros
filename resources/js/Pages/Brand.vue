@@ -116,6 +116,9 @@ export default {
                                             Nome
                                         </th>
                                         <th scope="col" class="px-6 py-3">
+                                            Carros
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
                                             Revisões feitas
                                         </th>
                                         <th scope="col" class="px-6 py-3">
@@ -129,7 +132,10 @@ export default {
                                             {{brand.name}}
                                         </th>
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            0
+                                            {{brand.number_cars}}
+                                        </th>
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{brand.total_revisions}}
                                         </th>
                                         <td class="px-6 py-4 text-right flex justify-between">
                                             <button

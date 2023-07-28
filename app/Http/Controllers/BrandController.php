@@ -12,7 +12,13 @@ class BrandController extends Controller
      */
     public function index()
     {
-        return response()->json(Brand::get());
+        return response()->json(
+            Brand::with('cars')
+                ->get()
+                ->sortByDesc('number_cars')
+                ->values()
+                ->all()
+        );
     }
 
     /**

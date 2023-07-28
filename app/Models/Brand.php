@@ -13,6 +13,18 @@ class Brand extends Model
         'name'
     ];
 
+    protected $appends = ['total_revisions', 'number_cars'];
+
+    public function getTotalRevisionsAttribute()
+    {
+        return Revision::whereIn('car_id', $this->cars->pluck('id'))->count();
+    }
+
+    public function getNumberCarsAttribute()
+    {
+        return $this->cars->count();
+    }
+
     public function cars()
     {
         return $this->hasMany(Car::class);
