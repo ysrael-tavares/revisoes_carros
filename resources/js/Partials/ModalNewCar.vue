@@ -160,21 +160,9 @@ export default {
 
             this.car.owner_id = this.owner.id
 
-            // Verifica se é uma edição ou inserção
-            const request = this.car.id
-                ? axios
-                    .patch(
-                        route('car.update', {car: this.car.id}),
-                        this.car
-                    )
-                : axios
-                    .post(
-                        route('car.store'),
-                        this.car
-                    )
-
             // Processa a requisição
-            request
+            axios
+                .post(route('car.store'), this.car)
                 .then(response => {
                     this.alert = response.data
                     this.car = {...defaultCar}
