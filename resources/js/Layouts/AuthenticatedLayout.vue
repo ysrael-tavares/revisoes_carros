@@ -15,16 +15,16 @@ const listRoutes = [
         route: "proprietarios"
     },
     {
-        name: "Marcas",
-        route: "marcas"
-    },
-    {
         name: "Carros",
         route: "carros"
     },
     {
         name: "Revisões",
         route: "revisoes"
+    },
+    {
+        name: "Marcas",
+        route: "marcas"
     },
 ]
 </script>
