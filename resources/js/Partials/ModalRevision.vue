@@ -141,7 +141,7 @@ export default {
         }
     },
     updated() {
-        if(this.presetRevision.id) this.revision = {...this.presetRevision}
+        if(this.presetRevision?.id) this.revision = {...this.presetRevision}
         this.clearAlerts()
     },
     methods:{

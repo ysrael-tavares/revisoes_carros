@@ -126,6 +126,10 @@ export default {
         this.brands = this.$page.props.brands
     },
     props: {
+        presetCar: {
+            type: Object,
+            default:null
+        },
         showModal: {
             type: Boolean,
             default: false
@@ -145,6 +149,10 @@ export default {
           brands: []
       }
     },
+    updated() {
+        if(this.presetCar?.id) this.car = {...this.presetCar}
+        this.clearAlerts()
+    },
     methods: {
         sendCar() { // Metodo para envio de proprietário
 
@@ -152,9 +160,20 @@ export default {
 
             this.car.owner_id = this.owner.id
 
+            const request = this.car.id
+                ? axios
+                    .patch(
+                        route('car.update', {car: this.car.id}),
+                        this.car
+                    )
+                : axios
+                    .post(
+                        route('car.store'),
+                        this.car
+                    )
+
             // Processa a requisição
-            axios
-                .post(route('car.store'), this.car)
+            request
                 .then(response => {
                     this.alert = response.data
                     this.car = {...defaultCar}
@@ -163,12 +182,16 @@ export default {
                 .catch(erro => {
                     this.errors = erro.response.data.errors
                 })
+                .finally(() => {
+                    this.$emit('updateRecord')
+                })
         },
         clearAlerts() { // Esvazia os alertas
             this.alert = ""
             this.errors = {}
         },
     },
+    emits: ['updateRecord'],
     components: {InputLabel, Modal, TextInput, InputSuccess, InputError, PrimaryButton}
 
 }
