@@ -163,8 +163,8 @@ export default {
                         </div>
 
                         <div class="flex flex-col">
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3 mb-3" v-if="typeView == 'by_sex'" v-for="(gender, index) in ownersListBySex">
-                                <h2 class="p-3">{{index}}</h2>
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3 mb-3" v-if="typeView == 'by_sex'" v-for="(gender, index) in ownersListBySex[0]">
+                                <h2 class="p-3">{{index}} - Média de Idade: {{ Math.floor(ownersListBySex[1][index]) }} anos</h2>
                                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>

@@ -21,9 +21,16 @@ class OwnerController extends Controller
      */
     public function by_sex()
     {
-        $owners = Owner::get()->groupBy('gender');
+        $genders = Owner::get()->groupBy('gender');
 
-        return response()->json($owners);
+        $separated = $genders->map(function ($gender){
+            return $gender->avg('age');
+        });
+
+        return response()->json([
+            $genders,
+            $separated
+        ]);
     }
 
 
