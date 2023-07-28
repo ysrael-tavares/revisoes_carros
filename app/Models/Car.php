@@ -18,6 +18,8 @@ class Car extends Model
         'year_of_manufacture',
     ];
 
+
+
     public function brand()
     {
         return $this->belongsTo(Brand::class);
@@ -26,5 +28,10 @@ class Car extends Model
     public function owner()
     {
         return $this->belongsTo(Owner::class);
+    }
+
+    public function revisions()
+    {
+        return $this->hasMany(Revision::class);
     }
 }

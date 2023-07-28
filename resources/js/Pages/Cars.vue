@@ -138,7 +138,7 @@ export default {
                                             {{car.owner.name}}
                                         </TableData>
                                         <TableData>
-                                            0
+                                            {{car.revisions.length}}
                                         </TableData>
                                         <td class="px-6 py-4 text-right flex justify-between">
                                             <button
