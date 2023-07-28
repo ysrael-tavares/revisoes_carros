@@ -12,7 +12,7 @@ class RevisionController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Revision::with('car.owner', 'car.brand')->get());
     }
 
     /**
