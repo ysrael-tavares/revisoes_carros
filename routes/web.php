@@ -36,7 +36,9 @@ Route::middleware('auth')->group(callback: function (){
     })->name('marcas');
 
     Route::get('/carros', function () {
-        return Inertia::render('Cars');
+        return Inertia::render('Cars', [
+            'brands' => \App\Models\Brand::get()
+        ]);
     })->name('carros');
 
     Route::controller(OwnerController::class)->group(function (){

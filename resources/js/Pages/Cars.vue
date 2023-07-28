@@ -1,74 +1,46 @@
 <script>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {Head, Link, router, useForm} from '@inertiajs/vue3';
+import {Head, Link } from '@inertiajs/vue3';
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
-import Modal from "@/Components/Modal.vue";
+import TableData from "@/Components/Table/TableData.vue";
+import ModalNewCar from "@/Partials/ModalNewCar.vue";
 
 export default {
     data: () => {
         return {
-            brand: {name: ''},
+            car: {},
             errors: {},
             alert: "",
-            brandsList: [],
+            carsList: [],
             showModal: false,
         }
     },
     components: {
-        Modal,
+        TableData,
         InputSuccess,
+        ModalNewCar,
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
-        sendBrand(){ // Metodo para envio de marca
-
-            this.clearAlerts()
-
-            // Verifica se é uma edição ou inserção
-            const request = this.brand.id
-                ? axios
-                    .patch(
-                        route('brand.update', {brand: this.brand.id}),
-                        this.brand
-                    )
-                : axios
-                    .post(
-                        route('brand.store'),
-                        this.brand
-                    )
-
-            // Processa a requisição
-            request
-                .then(response => {
-                    this.alert = response.data
-                    setTimeout(this.closeModal, 2000)
-                })
-                .catch(erro => {
-                    this.errors = erro.response.data.errors
-                })
-                .finally(() => {
-                    this.getBrands()
-                })
-        },
-        getBrands(){ // Metódo para atualizar lista de marcas
+        getCars(){ // Metódo para atualizar lista de carros
             axios
-                .get(route('brand.all'))
+                .get(route('car.all'))
                 .then(response => {
-                    this.brandsList = response.data
+                    this.carsList = response.data
                 })
         },
-        editBrand(brand){ // Prepara a edição de um marca
+        editCar(car){ // Prepara a edição de um carro
             this.clearAlerts()
-            this.brand = {...brand}
+            this.car = {...car}
             this.showModal = true
         },
-        closeModal(){ // Fecha o modal e esvazia o marca
+        closeModal(){ // Fecha o modal e esvazia o carro
             this.showModal = false
-            this.brand = {name: ""}
+            this.car = {name: ""}
         },
         clearAlerts(){ // Esvazia os alertas
             this.alert = ""
@@ -76,13 +48,13 @@ export default {
         }
     },
     created(){
-        this.getBrands()
+        this.getCars()
     }
 }
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Carros" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -95,16 +67,11 @@ export default {
                     <div class="p-4 sm:p-8 bg-white shadow">
                         <header class="flex justify-between">
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900">Lista de Marcas</h2>
+                                <h2 class="text-lg font-medium text-gray-900">Lista de Carros</h2>
 
                                 <p class="mt-1 text-sm text-gray-600">
-                                    Marcas atuais
+                                    Carros Cadastrados
                                 </p>
-                            </div>
-                            <div>
-                                <PrimaryButton @click="showModal = true" type="button">
-                                    + Marca
-                                </PrimaryButton>
                             </div>
                         </header>
 
@@ -113,10 +80,25 @@ export default {
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
-                                            Nome
+                                            Marca
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Revisões feitas
+                                            Modelo
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Placa
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Cor
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Ano de Fabricação
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Proprietário
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Revisões
                                         </th>
                                         <th scope="col" class="px-6 py-3">
                                             <span class="sr-only">Edit</span>
@@ -124,17 +106,32 @@ export default {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="brand in brandsList" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{brand.name}}
-                                        </th>
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <tr v-for="car in carsList" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <TableData>
+                                            {{car.brand.name}}
+                                        </TableData>
+                                        <TableData>
+                                            {{car.model}}
+                                        </TableData>
+                                        <TableData>
+                                            {{car.plate}}
+                                        </TableData>
+                                        <TableData>
+                                            {{car.color}}
+                                        </TableData>
+                                        <TableData>
+                                            {{car.year_of_manufacture}}
+                                        </TableData>
+                                        <TableData>
+                                            {{car.owner.name}}
+                                        </TableData>
+                                        <TableData>
                                             0
-                                        </th>
+                                        </TableData>
                                         <td class="px-6 py-4 text-right flex justify-between">
                                             <button
                                                 type="button"
-                                                @click="editBrand(brand)"
+                                                @click="editCar(car)"
                                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                                 title="Editar Marca"
                                             >
@@ -150,48 +147,6 @@ export default {
                 </div>
             </div>
         </div>
-
-        <Modal :show="showModal">
-            <div class="p-4 sm:p-8 bg-white shadow">
-                <header>
-                    <h2 class="text-lg font-medium text-gray-900">Cadastro de Marcas</h2>
-
-                    <p class="mt-1 text-sm text-gray-600">
-                        Preencha o formulário e cadastre uma nova marca
-                    </p>
-                </header>
-                <form @submit.prevent="sendBrand" class="mt-6 space-y-6">
-                    <div>
-                        <InputLabel for="name" value="Nome" />
-
-                        <TextInput
-                            id="name"
-                            type="text"
-                            class="mt-1 block w-full"
-                            v-model="brand.name"
-                            required
-                            autofocus
-                        />
-
-                        <InputError class="mt-2" :message="errors.name" />
-                    </div>
-
-                    <div>
-                        <InputSuccess :message="alert" />
-                    </div>
-
-                    <div class="flex items-center gap-4">
-                        <PrimaryButton
-                            type="button"
-                            @click="closeModal"
-                            class="bg-red-700 hover:bg-red-600">
-                            Cancelar
-                        </PrimaryButton>
-
-                        <PrimaryButton :disabled="brand.processing">Cadastrar</PrimaryButton>
-                    </div>
-                </form>
-            </div>
-        </Modal>
+        <ModalNewCar :owner="car.owner" :showModal="showModal" :closeModal="closeModal" :presetCar="car" />
     </AuthenticatedLayout>
 </template>
