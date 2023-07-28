@@ -119,15 +119,7 @@ import InputSuccess from "@/Components/InputSuccess.vue";
 import TextInput from "@/Components/TextInput.vue";
 import Modal from "@/Components/Modal.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-
-const defaultCar = {
-    brand_id: 0,
-    owner_id: 0,
-    model: "",
-    plate: "",
-    color: "",
-    year_of_manufacture: "",
-}
+import {defaultCar} from "@/Pages/Utils/Examples.js";
 
 export default {
     created(){
