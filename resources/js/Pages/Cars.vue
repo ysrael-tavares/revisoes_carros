@@ -180,6 +180,7 @@ export default {
             :showModal="showModalRevision"
             :car="car"
             :closeModal="closeModalRevision"
+            @updateRecords="getCars"
         />
     </AuthenticatedLayout>
 </template>
