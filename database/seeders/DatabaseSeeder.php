@@ -21,5 +21,7 @@ class DatabaseSeeder extends Seeder
 
         (new OwnerSeeder())->run();
         (new BrandSeeder())->run();
+        (new CarSeeder())->run();
+        (new RevisionSeeder())->run();
     }
 }

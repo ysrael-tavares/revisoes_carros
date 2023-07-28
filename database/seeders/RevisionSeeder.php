@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Car;
+use App\Models\Revision;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class CarSeeder extends Seeder
+class RevisionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Car::factory(20)->create();
+        Revision::factory(100)->create();
     }
 }
