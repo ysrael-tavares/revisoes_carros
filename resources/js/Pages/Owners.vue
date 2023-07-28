@@ -44,7 +44,6 @@ export default {
                 .get(route('owner.all_by_sex'))
                 .then(response => {
                     this.ownersListBySex = response.data
-                    console.log(response.data)
                 })
         },
         editOwner(owner) { // Prepara a edição de um proprietário
