@@ -5,6 +5,7 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RevisionController;
+use App\Models\Brand;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,7 +29,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(callback: function (){
     Route::get('/proprietarios', function () {
         return Inertia::render('Owners', [
-            'brands' => \App\Models\Brand::get()
+            'brands' => Brand::get()
         ]);
     })->name('proprietarios');
 
@@ -38,9 +39,13 @@ Route::middleware('auth')->group(callback: function (){
 
     Route::get('/carros', function () {
         return Inertia::render('Cars', [
-            'brands' => \App\Models\Brand::get()
+            'brands' => Brand::get()
         ]);
     })->name('carros');
+
+    Route::get('/revisoes', function () {
+        return Inertia::render('Revisions');
+    })->name('revisoes');
 
     Route::controller(OwnerController::class)->group(function (){
         Route::get('/owner', 'index')->name('owner.all');

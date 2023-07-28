@@ -8,6 +8,25 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+const listRoutes = [
+    {
+        name: "Proprietários",
+        route: "proprietarios"
+    },
+    {
+        name: "Marcas",
+        route: "marcas"
+    },
+    {
+        name: "Carros",
+        route: "carros"
+    },
+    {
+        name: "Revisões",
+        route: "revisoes"
+    },
+]
 </script>
 
 <template>
@@ -29,16 +48,8 @@ const showingNavigationDropdown = ref(false);
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('proprietarios')" :active="route().current('proprietarios')">
-                                    Proprietários
-                                </NavLink>
-
-                                <NavLink :href="route('marcas')" :active="route().current('marcas')">
-                                    Marcas
-                                </NavLink>
-
-                                <NavLink :href="route('carros')" :active="route().current('carros')">
-                                    Carros
+                                <NavLink v-for="link in listRoutes" :href="route(link.route)" :active="route().current(link.route)">
+                                    {{link.name}}
                                 </NavLink>
                             </div>
                         </div>
@@ -120,16 +131,8 @@ const showingNavigationDropdown = ref(false);
                     class="sm:hidden"
                 >
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('proprietarios')" :active="route().current('proprietarios')">
-                            Proprietários
-                        </ResponsiveNavLink>
-
-                        <ResponsiveNavLink :href="route('marcas')" :active="route().current('marcas')">
-                            Marcas
-                        </ResponsiveNavLink>
-
-                        <ResponsiveNavLink :href="route('carros')" :active="route().current('carros')">
-                            Carros
+                        <ResponsiveNavLink v-for="link in listRoutes" :href="route(link.route)" :active="route().current(link.route)">
+                            {{link.name}}
                         </ResponsiveNavLink>
                     </div>
 
