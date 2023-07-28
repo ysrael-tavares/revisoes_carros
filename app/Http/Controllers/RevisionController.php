@@ -63,7 +63,17 @@ class RevisionController extends Controller
      */
     public function update(Request $request, Revision $revision)
     {
-        //
+        $rules = [
+            'car_id' => ['required', 'numeric'],
+            'review_day' => ['required', 'date', 'before_or_equal:'.date('Y-m-d')]
+        ];
+
+        $data = $request->validate($rules);
+
+        if($revision->update($data))
+            return response()->json('Revisão Alterada', 201);
+
+        return response()->json('Erro ao alterar revisão');
     }
 
     /**

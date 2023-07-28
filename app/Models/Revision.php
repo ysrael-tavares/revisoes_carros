@@ -13,4 +13,9 @@ class Revision extends Model
         'car_id',
         'review_day'
     ];
+
+    public function car()
+    {
+        return $this->belongsTo(Car::class);
+    }
 }

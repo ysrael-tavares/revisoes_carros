@@ -119,7 +119,7 @@ import InputSuccess from "@/Components/InputSuccess.vue";
 import TextInput from "@/Components/TextInput.vue";
 import Modal from "@/Components/Modal.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import {defaultCar} from "@/Pages/Utils/Examples.js";
+import {defaultCar} from "@/Utils/Examples.js";
 
 export default {
     created(){

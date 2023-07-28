@@ -7,86 +7,65 @@ import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
 import Modal from "@/Components/Modal.vue";
+import moment from "moment";
+import ModalRevision from "@/Partials/ModalRevision.vue";
+import {defaultRevision} from "@/Utils/Examples.js";
 
 export default {
     data: () => {
         return {
-            revision: {name: ''},
-            errors: {},
-            alert: "",
+            revision: defaultRevision,
             revisionsList: [],
             showModal: false,
         }
     },
     components: {
+        ModalRevision,
         Modal,
         InputSuccess,
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
-        sendRevision(){ // Metodo para envio de marca
-
-            this.clearAlerts()
-
-            // Verifica se é uma edição ou inserção
-            const request = this.revision.id
-                ? axios
-                    .patch(
-                        route('revision.update', {revision: this.revision.id}),
-                        this.revision
-                    )
-                : axios
-                    .post(
-                        route('revision.store'),
-                        this.revision
-                    )
-
-            // Processa a requisição
-            request
-                .then(response => {
-                    this.alert = response.data
-                    setTimeout(this.closeModal, 2000)
-                })
-                .catch(erro => {
-                    this.errors = erro.response.data.errors
-                })
-                .finally(() => {
-                    this.getRevisions()
-                })
-        },
-        getRevisions(){ // Metódo para atualizar lista de marcas
+        getRevisions(){ // Metódo para atualizar lista de revisãos
             axios
                 .get(route('revision.all'))
                 .then(response => {
                     this.revisionsList = response.data
                 })
         },
-        editRevision(revision){ // Prepara a edição de um marca
-            this.clearAlerts()
+        editRevision(revision){ // Prepara a edição de um revisão
             this.revision = {...revision}
             this.showModal = true
         },
-        closeModal(){ // Fecha o modal e esvazia o marca
+        closeModal(){ // Fecha o modal e esvazia a revisão
             this.showModal = false
-            this.revision = {name: ""}
-        },
-        clearAlerts(){ // Esvazia os alertas
-            this.alert = ""
-            this.errors = {}
+            this.revision = {...defaultRevision}
         }
     },
     created(){
         this.getRevisions()
+    },
+    computed: {
+        formatedRevisionList()
+        {
+            return this.revisionsList.map(revision => {
+                return {
+                    ...revision,
+                    info: `${revision.car.brand.name} ${revision.car.model} ${revision.car.year_of_manufacture}`,
+                    date: moment(revision.review_day).format('DD/MM/YYYY')
+                }
+            })
+        }
     }
 }
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Revisões" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Marcas</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Revisões</h2>
         </template>
 
         <div class="py-12">
@@ -95,16 +74,11 @@ export default {
                     <div class="p-4 sm:p-8 bg-white shadow">
                         <header class="flex justify-between">
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900">Lista de Marcas</h2>
+                                <h2 class="text-lg font-medium text-gray-900">Lista de Revisões</h2>
 
                                 <p class="mt-1 text-sm text-gray-600">
-                                    Marcas atuais
+                                    Revisões atuais
                                 </p>
-                            </div>
-                            <div>
-                                <PrimaryButton @click="showModal = true" type="button">
-                                    + Marca
-                                </PrimaryButton>
                             </div>
                         </header>
 
@@ -113,10 +87,13 @@ export default {
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
-                                            Nome
+                                            Data da revisão
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Revisões feitas
+                                            Carro
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Proprietário
                                         </th>
                                         <th scope="col" class="px-6 py-3">
                                             <span class="sr-only">Edit</span>
@@ -124,19 +101,22 @@ export default {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="revision in revisionsList" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <tr v-for="revision in formatedRevisionList" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{revision.name}}
+                                            {{revision.date}}
                                         </th>
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            0
+                                            {{revision.info}}
+                                        </th>
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{revision.car.owner.name}}
                                         </th>
                                         <td class="px-6 py-4 text-right flex justify-between">
                                             <button
                                                 type="button"
                                                 @click="editRevision(revision)"
                                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                                title="Editar Marca"
+                                                title="Editar Revisão"
                                             >
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
@@ -150,48 +130,12 @@ export default {
                 </div>
             </div>
         </div>
-
-        <Modal :show="showModal">
-            <div class="p-4 sm:p-8 bg-white shadow">
-                <header>
-                    <h2 class="text-lg font-medium text-gray-900">Cadastro de Marcas</h2>
-
-                    <p class="mt-1 text-sm text-gray-600">
-                        Preencha o formulário e cadastre uma nova marca
-                    </p>
-                </header>
-                <form @submit.prevent="sendRevision" class="mt-6 space-y-6">
-                    <div>
-                        <InputLabel for="name" value="Nome" />
-
-                        <TextInput
-                            id="name"
-                            type="text"
-                            class="mt-1 block w-full"
-                            v-model="revision.name"
-                            required
-                            autofocus
-                        />
-
-                        <InputError class="mt-2" :message="errors.name" />
-                    </div>
-
-                    <div>
-                        <InputSuccess :message="alert" />
-                    </div>
-
-                    <div class="flex items-center gap-4">
-                        <PrimaryButton
-                            type="button"
-                            @click="closeModal"
-                            class="bg-red-700 hover:bg-red-600">
-                            Cancelar
-                        </PrimaryButton>
-
-                        <PrimaryButton :disabled="revision.processing">Cadastrar</PrimaryButton>
-                    </div>
-                </form>
-            </div>
-        </Modal>
+        <ModalRevision
+            :car="revision.car"
+            :showModal="showModal"
+            :closeModal="closeModal"
+            :presetRevision="revision"
+            @updateRecords="getRevisions"
+        />
     </AuthenticatedLayout>
 </template>

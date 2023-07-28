@@ -6,3 +6,7 @@ export const defaultCar = {
     color: "",
     year_of_manufacture: "",
 }
+
+export const defaultRevision = {
+    review_day: ''
+}
