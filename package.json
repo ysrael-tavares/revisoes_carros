@@ -18,6 +18,8 @@
         "vue": "^3.2.41"
     },
     "dependencies": {
-        "moment": "^2.29.4"
+        "chart.js": "^4.3.2",
+        "moment": "^2.29.4",
+        "vue-chartjs": "^5.2.0"
     }
 }
