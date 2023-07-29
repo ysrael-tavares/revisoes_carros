@@ -85,6 +85,10 @@ export default {
                 this.orderSortAsc = true
                 this.columnSort = column
             }
+        },
+        reverseDate(date)
+        {
+            return date.split('/').reverse().join('-')
         }
     },
     computed:{
@@ -99,15 +103,20 @@ export default {
                         .length > 0
                 })
                 .sort((a, b) => {
-                // Verifica se é maior que próximo termo
-                const isBiggest = a[this.columnSort] > b[this.columnSort] ? 1 : -1
+                    // Verifica se está em ordenação crescente
+                    const isAsc = this.orderSortAsc ? 1 : -1
 
-                // Verifica se está em ordenação crescente
-                const isAsc = this.orderSortAsc ? 1 : -1
+                    // Verifica se é uma data (DD-MM-YYYY), usando Regex
+                    const isDate = typeof a[this.columnSort] !== 'number' &&
+                        a[this.columnSort]
+                        .match(/[0-9]{2}[/][0-9]{2}[/][0-9]{4}/g)
 
-                // Retorna o produto das duas condições
-                return isBiggest * isAsc
-            })
+                    if(isDate) // Caso seja uma data, converte as datas para formato YYYY-MM-DD
+                        return isAsc * (this.reverseDate(a[this.columnSort]) > this.reverseDate(b[this.columnSort]) ? 1 : -1)
+
+                    // Caso não seja uma data, compara String || Number
+                    return isAsc * (a[this.columnSort] > b[this.columnSort] ? 1 : -1)
+                })
         }
     }
 }
