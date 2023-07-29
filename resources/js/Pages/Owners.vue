@@ -20,7 +20,8 @@ export default {
             ownersListBySex: [],
             showModal: false,
             showModalCar: false,
-            typeView: 'all'
+            typeView: 'all',
+            searchText: "",
         }
     },
     components: {
@@ -71,6 +72,16 @@ export default {
         this.getOwners()
         this.getOwnersBySex()
     },
+    computed: {
+        formatedOwnerList(){
+            return this.ownersList
+                .filter(
+                    owner =>
+                        owner.name.includes(this.searchText) ||
+                        owner.email.includes(this.searchText) ||
+                        owner.phone.includes(this.searchText))
+        }
+    }
 }
 </script>
 
@@ -98,11 +109,19 @@ export default {
                                 <PrimaryButton @click="toggleView" type="button">
                                     {{ typeView == 'all' ? 'Classificar por Sexo' : 'Exibição Padrão' }}
                                 </PrimaryButton>
+
                                 <PrimaryButton @click="showModal = true" type="button">
                                     + Proprietário
                                 </PrimaryButton>
                             </div>
                         </header>
+                        <div class="my-3 flex flex-col space-y-3 md:space-y-0 md:flex-row md:justify-between md:items-center md:space-x-3">
+                            <TextInput
+                                v-model="searchText"
+                                placeholder="Buscar por: Nome, email ou telefone"
+                                class="w-full"
+                            />
+                        </div>
 
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3" v-if="typeView == 'all'">
                             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -126,7 +145,7 @@ export default {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="owner in ownersList" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <tr v-for="owner in formatedOwnerList" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{owner.name}}
                                         </th>
