@@ -7,6 +7,7 @@ import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
 import Modal from "@/Components/Modal.vue";
+import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 
 export default {
     data: () => {
@@ -19,6 +20,7 @@ export default {
         }
     },
     components: {
+        PrimaryTable,
         Modal,
         InputSuccess,
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
@@ -77,6 +79,28 @@ export default {
     },
     created(){
         this.getBrands()
+    },
+    computed: {
+        formatedBrandList(){
+            return this.brandsList
+                .map(brand => {
+                    return [
+                        brand.name,
+                        brand.number_cars,
+                        brand.total_revisions,
+                        {
+                            type: 'actions',
+                            actions: [
+                                {
+                                    title: 'Editar Marca',
+                                    classIcon: "fa-solid fa-pen-to-square",
+                                    onClick: () => this.editBrand(brand)
+                                }
+                            ]
+                        }
+                    ]
+                })
+        }
     }
 }
 </script>
@@ -108,49 +132,10 @@ export default {
                             </div>
                         </header>
 
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            Nome
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Carros
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Revisões feitas
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            <span class="sr-only">Edit</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="brand in brandsList" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{brand.name}}
-                                        </th>
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{brand.number_cars}}
-                                        </th>
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{brand.total_revisions}}
-                                        </th>
-                                        <td class="px-6 py-4 text-right flex justify-between">
-                                            <button
-                                                type="button"
-                                                @click="editBrand(brand)"
-                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                                title="Editar Marca"
-                                            >
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <PrimaryTable
+                            :cols="['Nome', 'Carros', 'Revisões feitas', '']"
+                            :rows="formatedBrandList"
+                        />
 
                     </div>
                 </div>

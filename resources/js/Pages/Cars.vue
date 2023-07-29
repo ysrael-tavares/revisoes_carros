@@ -11,6 +11,7 @@ import ModalNewCar from "@/Partials/ModalNewCar.vue";
 import Modal from "@/Components/Modal.vue";
 import {defaultCar} from "@/Utils/Examples.js";
 import ModalRevision from "@/Partials/ModalRevision.vue";
+import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 
 export default {
     props:{
@@ -27,6 +28,7 @@ export default {
         }
     },
     components: {
+        PrimaryTable,
         ModalRevision,
         Modal,
         TableData,
@@ -61,6 +63,36 @@ export default {
     },
     created(){
         this.getCars()
+    },
+    computed: {
+        formatedCarList(){
+            return this.carsList.map(car => {
+                return [
+                    car.brand.name,
+                    car.model,
+                    car.plate,
+                    car.color,
+                    car.year_of_manufacture,
+                    car.owner.name,
+                    car.revisions.length,
+                    {
+                        type: 'actions',
+                        actions: [
+                            {
+                                title: 'Editar Carro',
+                                classIcon: "fa-solid fa-pen-to-square",
+                                onClick: () => this.editCar(car)
+                            },
+                            {
+                                title: 'Nova Revisão',
+                                classIcon: "fa-solid fa-clipboard-list",
+                                onClick: () => this.newRevision(car)
+                            }
+                        ]
+                    }
+                ]
+            })
+        }
     }
 }
 </script>
@@ -87,82 +119,10 @@ export default {
                             </div>
                         </header>
 
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            Marca
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Modelo
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Placa
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Cor
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Ano de Fabricação
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Proprietário
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Revisões
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            <span class="sr-only">Edit</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="car in carsList" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <TableData>
-                                            {{car.brand.name}}
-                                        </TableData>
-                                        <TableData>
-                                            {{car.model}}
-                                        </TableData>
-                                        <TableData>
-                                            {{car.plate}}
-                                        </TableData>
-                                        <TableData>
-                                            {{car.color}}
-                                        </TableData>
-                                        <TableData>
-                                            {{car.year_of_manufacture}}
-                                        </TableData>
-                                        <TableData>
-                                            {{car.owner.name}}
-                                        </TableData>
-                                        <TableData>
-                                            {{car.revisions.length}}
-                                        </TableData>
-                                        <td class="px-6 py-4 text-right flex space-x-1">
-                                            <button
-                                                type="button"
-                                                @click="editCar(car)"
-                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                                title="Editar Marca"
-                                            >
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                @click="newRevision(car)"
-                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                                title="Editar Marca"
-                                            >
-                                                <i class="fa-solid fa-clipboard-list"></i>
-                                            </button>
-
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <PrimaryTable
+                            :cols="['Marca','Modelo','Placa','Cor','Ano de Fabricação','Proprietário','Revisões','']"
+                            :rows="formatedCarList"
+                        />
 
                     </div>
                 </div>

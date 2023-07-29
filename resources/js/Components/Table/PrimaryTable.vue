@@ -10,12 +10,17 @@
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" class="px-6 py-3 items-center cursor-pointer" v-for="(col, key) in cols" @click="sort(key)">
-                    {{col}}
-                    <i class="fa-solid " :class="{
+                <th scope="col" class="px-6 py-3 cursor-pointer" v-for="(col, key) in cols" @click="sort(key)">
+                    <div class="flex items-center space-x-2">
+                        <span>
+                            {{col}}
+                        </span>
+                        <i class="fa-solid " :class="{
                         'fa-caret-up': orderSortAsc && columnSort == key,
                         'fa-caret-down': !orderSortAsc && columnSort == key
                     }"></i>
+                    </div>
+
                 </th>
             </tr>
             </thead>
@@ -32,12 +37,13 @@
 
                     <div
                         v-else-if="data.type == 'actions'"
-                        class="text-right flex space-x-1"
+                        class="text-right flex space-x-4"
                     >
                         <button
                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                             v-for="action in data.actions"
                             @click="action.onClick"
+                            :title="action.title"
                         >
                             <i :class="action.classIcon"></i>
                         </button>

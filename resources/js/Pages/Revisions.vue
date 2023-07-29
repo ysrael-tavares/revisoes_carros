@@ -10,6 +10,7 @@ import Modal from "@/Components/Modal.vue";
 import moment from "moment";
 import ModalRevision from "@/Partials/ModalRevision.vue";
 import {defaultRevision} from "@/Utils/Examples.js";
+import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 
 export default {
     data: () => {
@@ -20,6 +21,7 @@ export default {
         }
     },
     components: {
+        PrimaryTable,
         ModalRevision,
         Modal,
         InputSuccess,
@@ -48,13 +50,24 @@ export default {
     computed: {
         formatedRevisionList()
         {
-            return this.revisionsList.map(revision => {
-                return {
-                    ...revision,
-                    info: `${revision.car.brand.name} ${revision.car.model} ${revision.car.year_of_manufacture}`,
-                    date: moment(revision.review_day).format('DD/MM/YYYY')
-                }
-            })
+            return this.revisionsList
+                .map(revision => {
+                    return [
+                        moment(revision.review_day).format('DD/MM/YYYY'),
+                        `${revision.car.brand.name} ${revision.car.model} ${revision.car.year_of_manufacture}`,
+                        revision.car.owner.name,
+                        {
+                            type: 'actions',
+                            actions: [
+                                {
+                                    title: 'Editar Revisão',
+                                    classIcon: "fa-solid fa-pen-to-square",
+                                    onClick: () => this.editRevision(revision)
+                                }
+                            ]
+                        }
+                    ]
+                })
         }
     }
 }
@@ -82,49 +95,10 @@ export default {
                             </div>
                         </header>
 
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            Data da revisão
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Carro
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Proprietário
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            <span class="sr-only">Edit</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="revision in formatedRevisionList" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{revision.date}}
-                                        </th>
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{revision.info}}
-                                        </th>
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{revision.car.owner.name}}
-                                        </th>
-                                        <td class="px-6 py-4 text-right flex justify-between">
-                                            <button
-                                                type="button"
-                                                @click="editRevision(revision)"
-                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                                title="Editar Revisão"
-                                            >
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <PrimaryTable
+                            :cols="['Data da revisão','Carro','Proprietário','']"
+                            :rows="formatedRevisionList"
+                        />
 
                     </div>
                 </div>
