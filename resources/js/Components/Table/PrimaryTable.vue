@@ -1,0 +1,112 @@
+<template>
+    <div class="my-3">
+        <TextInput
+            v-model="searchText"
+            placeholder="Buscar..."
+            class="w-full"
+        />
+    </div>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3 items-center cursor-pointer" v-for="(col, key) in cols" @click="sort(key)">
+                    {{col}}
+                    <i class="fa-solid " :class="{
+                        'fa-caret-up': orderSortAsc && columnSort == key,
+                        'fa-caret-down': !orderSortAsc && columnSort == key
+                    }"></i>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="row in formatedRows" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+
+                <td
+                    v-for="data in row"
+                    class="px-6 py-4"
+                >
+                    <span v-if="['string', 'number'].includes(typeof data)">
+                        {{data}}
+                    </span>
+
+                    <div
+                        v-else-if="data.type == 'actions'"
+                        class="text-right flex space-x-1"
+                    >
+                        <button
+                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                            v-for="action in data.actions"
+                            @click="action.onClick"
+                        >
+                            <i :class="action.classIcon"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</template>
+
+<script>
+import TextInput from "@/Components/TextInput.vue";
+
+export default {
+    components: {TextInput},
+    props: {
+        cols: {
+            type: Array,
+            default: []
+        },
+        rows: {
+            type: Array,
+            default: []
+        }
+    },
+    data(){
+        return {
+            columnSort: 0,
+            orderSortAsc: true,
+            searchText: ''
+        }
+    },
+    methods: {
+        sort(column)
+        {
+            if(this.columnSort == column) this.orderSortAsc = !this.orderSortAsc
+            else {
+                this.orderSortAsc = true
+                this.columnSort = column
+            }
+        }
+    },
+    computed:{
+        formatedRows(){
+            return this.rows
+                .filter(row => {
+                    return row
+                        .filter(data =>
+                            ['string'].includes(typeof data) &&
+                            data.toLowerCase().indexOf(this.searchText.toLowerCase()) > -1
+                        )
+                        .length > 0
+                })
+                .sort((a, b) => {
+                // Verifica se é maior que próximo termo
+                const isBiggest = a[this.columnSort] > b[this.columnSort] ? 1 : -1
+
+                // Verifica se está em ordenação crescente
+                const isAsc = this.orderSortAsc ? 1 : -1
+
+                // Retorna o produto das duas condições
+                return isBiggest * isAsc
+            })
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+
+</style>
