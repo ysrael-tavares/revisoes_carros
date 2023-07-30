@@ -2,10 +2,10 @@
     <Modal :show="showModal">
         <div class="p-4 sm:p-8 bg-white shadow">
             <header>
-                <h2 class="text-lg font-medium text-gray-900">Cadastro de Carros</h2>
+                <h2 class="text-lg font-medium text-gray-900">{{car.id ? "Edição" : "Cadastro"}} de Carros</h2>
 
                 <p class="mt-1 text-sm text-gray-600">
-                    Preencha o formulário e cadastre um novo carro
+                    Preencha o formulário e {{car.id ? "edite o" : "cadastre um novo"}}  carro
                 </p>
             </header>
             <form @submit.prevent="sendCar" class="mt-6 space-y-6">
@@ -105,7 +105,9 @@
                         Cancelar
                     </PrimaryButton>
 
-                    <PrimaryButton :disabled="owner.processing">Cadastrar</PrimaryButton>
+                    <PrimaryButton :disabled="owner.processing">
+                        {{car.id ? "Salvar" : "Cadastrar"}}
+                    </PrimaryButton>
                 </div>
             </form>
         </div>
@@ -128,7 +130,7 @@ export default {
     props: {
         presetCar: {
             type: Object,
-            default:null
+            default: defaultCar
         },
         showModal: {
             type: Boolean,
@@ -145,12 +147,12 @@ export default {
       return {
           errors: {},
           alert: "",
-          car: {...defaultCar},
+          car: defaultCar,
           brands: []
       }
     },
     updated() {
-        if(this.presetCar?.id) this.car = {...this.presetCar}
+        this.car = {...this.presetCar}
         this.clearAlerts()
     },
     methods: {

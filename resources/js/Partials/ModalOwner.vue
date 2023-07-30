@@ -2,10 +2,10 @@
     <Modal :show="showModal">
         <div class="p-4 sm:p-8 bg-white shadow">
             <header>
-                <h2 class="text-lg font-medium text-gray-900">Cadastro de Proprietários</h2>
+                <h2 class="text-lg font-medium text-gray-900">{{owner.id ? "Edição" : "Cadastro"}} de Proprietários</h2>
 
                 <p class="mt-1 text-sm text-gray-600">
-                    Preencha o formulário e cadastre um novo proprietário
+                    Preencha o formulário e {{owner.id ? "edite o" : "cadastro um novo"}}  proprietário
                 </p>
             </header>
             <form @submit.prevent="sendOwner" class="mt-6 space-y-6">
@@ -93,7 +93,9 @@
                         Cancelar
                     </PrimaryButton>
 
-                    <PrimaryButton :disabled="owner.processing">Cadastrar</PrimaryButton>
+                    <PrimaryButton :disabled="owner.processing">
+                        {{owner.id ? "Salvar" : "Cadastrar"}}
+                    </PrimaryButton>
                 </div>
             </form>
         </div>
@@ -167,7 +169,7 @@ export default {
         },
     },
     updated() {
-        if(this.presetOwner.id) this.owner = this.presetOwner
+        this.owner = this.presetOwner
         this.clearAlerts()
     },
     emits: ['updateRecords'],

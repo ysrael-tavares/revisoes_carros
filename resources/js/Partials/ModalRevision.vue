@@ -2,10 +2,10 @@
     <Modal :show="showModal">
         <div class="p-4 sm:p-8 bg-white shadow">
             <header>
-                <h2 class="text-lg font-medium text-gray-900">Nova Revisão</h2>
+                <h2 class="text-lg font-medium text-gray-900">{{revision.id ? "Edição" : "Cadastro"}} de Revisão</h2>
 
                 <p class="mt-1 text-sm text-gray-600">
-                    Preencha o formulário e cadastre uma nova revisão no automóvel selecionado
+                    Preencha o formulário e {{revision.id ? "edite a" : "cadastre uma nova"}}  revisão
                 </p>
             </header>
             <form @submit.prevent="sendRevision" class="mt-6 space-y-6">
@@ -27,8 +27,8 @@
                 <div>
                     <InputLabel value="Informações do Carro" />
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
                                     Marca
@@ -48,7 +48,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <tr class="bg-white border-b hover:bg-gray-50">
                                 <TableData>
                                     {{car.brand.name}}
                                 </TableData>
@@ -97,7 +97,9 @@
                         Cancelar
                     </PrimaryButton>
 
-                    <PrimaryButton>Cadastrar</PrimaryButton>
+                    <PrimaryButton>
+                        {{revision.id ? "Salvar" : "Cadastrar"}}
+                    </PrimaryButton>
                 </div>
             </form>
         </div>
@@ -141,7 +143,7 @@ export default {
         }
     },
     updated() {
-        if(this.presetRevision?.id) this.revision = {...this.presetRevision}
+        this.revision = {...this.presetRevision}
         this.clearAlerts()
     },
     methods:{

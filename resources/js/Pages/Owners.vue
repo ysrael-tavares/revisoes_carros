@@ -69,6 +69,11 @@ export default {
         toggleView()
         {
             this.typeView = this.typeView == 'all' ? 'by_sex' : 'all'
+        },
+        newOwner()
+        {
+            this.owner = ownerDefault
+            this.showModal = true
         }
     },
     created(){
@@ -133,7 +138,7 @@ export default {
                                     {{ typeView == 'all' ? 'Classificar por Sexo' : 'Exibição Padrão' }}
                                 </PrimaryButton>
 
-                                <PrimaryButton @click="showModal = true" type="button">
+                                <PrimaryButton @click="newOwner" type="button">
                                     + Proprietário
                                 </PrimaryButton>
                             </div>

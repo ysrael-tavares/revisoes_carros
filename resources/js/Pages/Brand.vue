@@ -145,10 +145,10 @@ export default {
         <Modal :show="showModal">
             <div class="p-4 sm:p-8 bg-white shadow">
                 <header>
-                    <h2 class="text-lg font-medium text-gray-900">Cadastro de Marcas</h2>
+                    <h2 class="text-lg font-medium text-gray-900">{{brand.id ? "Edição" : "Cadastro"}} de Marcas</h2>
 
                     <p class="mt-1 text-sm text-gray-600">
-                        Preencha o formulário e cadastre uma nova marca
+                        Preencha o formulário e {{brand.id ? "edite a" : "cadastre uma nova"}}  marca
                     </p>
                 </header>
                 <form @submit.prevent="sendBrand" class="mt-6 space-y-6">
@@ -179,7 +179,9 @@ export default {
                             Cancelar
                         </PrimaryButton>
 
-                        <PrimaryButton :disabled="brand.processing">Cadastrar</PrimaryButton>
+                        <PrimaryButton :disabled="brand.processing">
+                            {{brand.id ? "Salvar" : "Cadastrar"}}
+                        </PrimaryButton>
                     </div>
                 </form>
             </div>
