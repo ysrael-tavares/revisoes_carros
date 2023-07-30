@@ -7,8 +7,8 @@
         />
     </div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
                 <th scope="col" class="px-6 py-3 cursor-pointer" v-for="(col, key) in cols" @click="sort(key)">
                     <div class="flex items-center space-x-2">
@@ -25,8 +25,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="row in formatedRows" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-
+            <tr v-for="row in formatedRows" class="bg-white border-b hover:bg-gray-50">
                 <td
                     v-for="data in row"
                     class="px-6 py-4"
@@ -40,7 +39,7 @@
                         class="text-right flex space-x-4"
                     >
                         <button
-                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                            class="font-medium text-blue-600 hover:underline"
                             v-for="action in data.actions"
                             @click="action.onClick"
                             :title="action.title"
