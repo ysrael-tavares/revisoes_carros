@@ -12,14 +12,9 @@
                 <div>
                     <InputLabel for="name" value="Proprietário" />
 
-                    <TextInput
-                        id="name"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="owner.name"
-                        required
-                        :readonly="true"
-                    />
+                    <span>
+                        {{owner.name}}
+                    </span>
 
                     <InputError class="mt-2" :message="errors.owner_id" />
                 </div>
@@ -33,6 +28,7 @@
                         v-model="car.brand_id"
                         required
                     >
+                        <option value="0">Selecione a Marca</option>
                         <option :value="brand.id" v-for="brand in brands">{{brand.name}}</option>
                     </select>
 
@@ -42,12 +38,20 @@
                 <div>
                     <InputLabel for="model" value="Modelo" />
 
-                    <TextInput
-                        id="model"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="car.model"
-                    />
+                    <div class="flex items-end">
+                        <TextInput
+                            id="model"
+                            type="text"
+                            class="mt-1 block w-full border-r-0 rounded-r-none"
+                            v-model="car.model"
+                            maxlength="30"
+                            required
+                        />
+
+                        <span class="py-2 px-3 border border-gray-300 rounded-r-md" title="Caracteres Restantes">
+                            {{30 - car.model.length}}
+                        </span>
+                    </div>
 
                     <InputError class="mt-2" :message="errors.model" />
                 </div>
@@ -55,13 +59,20 @@
                 <div>
                     <InputLabel for="plate" value="Placa (Ex.: ABC1D23 ou ABC1234)" />
 
-                    <TextInput
-                        id="plate"
-                        type="text"
-                        class="mt-1 block w-full uppercase"
-                        maxlength="7"
-                        v-model="car.plate"
-                    />
+                    <div class="flex items-end">
+                        <TextInput
+                            id="plate"
+                            type="text"
+                            class="mt-1 block w-full border-r-0 rounded-r-none uppercase"
+                            v-model="car.plate"
+                            maxlength="7"
+                            required
+                        />
+
+                        <span class="py-2 px-3 border border-gray-300 rounded-r-md" title="Caracteres Restantes">
+                            {{7 - car.plate.length}}
+                        </span>
+                    </div>
 
                     <InputError class="mt-2" :message="errors.plate" />
                 </div>
@@ -69,12 +80,20 @@
                 <div>
                     <InputLabel for="color" value="Cor" />
 
-                    <TextInput
-                        id="color"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="car.color"
-                    />
+                    <div class="flex items-end">
+                        <TextInput
+                            id="color"
+                            type="text"
+                            class="mt-1 block w-full border-r-0 rounded-r-none"
+                            v-model="car.color"
+                            maxlength="20"
+                            required
+                        />
+
+                        <span class="py-2 px-3 border border-gray-300 rounded-r-md" title="Caracteres Restantes">
+                            {{20 - car.color.length}}
+                        </span>
+                    </div>
 
                     <InputError class="mt-2" :message="errors.color" />
                 </div>
@@ -82,13 +101,20 @@
                 <div>
                     <InputLabel for="year_of_manufacture" value="Ano de Fabricação (YYYY)" />
 
-                    <TextInput
-                        id="year_of_manufacture"
-                        type="text"
-                        class="mt-1 block w-full"
-                        maxlength="4"
-                        v-model="car.year_of_manufacture"
-                    />
+                    <div class="flex items-end">
+                        <TextInput
+                            id="year_of_manufacture"
+                            type="text"
+                            class="mt-1 block w-full border-r-0 rounded-r-none"
+                            v-model="car.year_of_manufacture"
+                            maxlength="4"
+                            required
+                        />
+
+                        <span class="py-2 px-3 border border-gray-300 rounded-r-md" title="Caracteres Restantes">
+                            {{4 - (isNaN(car.year_of_manufacture.length) ? 4 : car.year_of_manufacture.length)}}
+                        </span>
+                    </div>
 
                     <InputError class="mt-2" :message="errors.year_of_manufacture" />
                 </div>
@@ -105,7 +131,7 @@
                         Cancelar
                     </PrimaryButton>
 
-                    <PrimaryButton :disabled="owner.processing">
+                    <PrimaryButton v-if="JSON.stringify(car) !== JSON.stringify(presetCar)">
                         {{car.id ? "Salvar" : "Cadastrar"}}
                     </PrimaryButton>
                 </div>
@@ -122,6 +148,7 @@ import TextInput from "@/Components/TextInput.vue";
 import Modal from "@/Components/Modal.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import {defaultCar} from "@/Utils/Examples.js";
+import { plate } from "@/Utils/regex.js";
 
 export default {
     created(){
@@ -162,6 +189,8 @@ export default {
 
             this.car.owner_id = this.owner.id
 
+            if(!this.validateData()) return
+
             const request = this.car.id
                 ? axios
                     .patch(
@@ -187,6 +216,30 @@ export default {
                 .finally(() => {
                     this.$emit('updateRecord')
                 })
+        },
+        validateData(){
+            let numberErrors = 0
+
+            // Validando Placa
+            const isPlate = this.car.plate.match(plate)
+
+            if(!isPlate)
+            {
+                this.errors.plate = 'Placa Inválida'
+                numberErrors++
+            }
+
+            // Validando Ano
+            const year = parseInt(this.car.year_of_manufacture)
+
+            if(isNaN(year) || new Date().getFullYear() < year)
+            {
+                this.errors.year_of_manufacture = 'Ano Inválido'
+                numberErrors++
+            }
+
+            console.log(numberErrors)
+            return numberErrors === 0
         },
         clearAlerts() { // Esvazia os alertas
             this.alert = ""
