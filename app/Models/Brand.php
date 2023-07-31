@@ -13,7 +13,7 @@ class Brand extends Model
         'name'
     ];
 
-    protected $appends = ['total_revisions', 'number_cars'];
+    protected $appends = ['total_revisions', 'number_cars', 'number_cars_women', 'number_cars_men'];
 
     public function getTotalRevisionsAttribute()
     {
@@ -23,6 +23,16 @@ class Brand extends Model
     public function getNumberCarsAttribute()
     {
         return $this->cars->count();
+    }
+
+    public function getNumberCarsWomenAttribute()
+    {
+        return $this->cars->where('owner.gender', 'Mulher')->count();
+    }
+
+    public function getNumberCarsMenAttribute()
+    {
+        return $this->cars->where('owner.gender', 'Homem')->count();
     }
 
     public function cars()
