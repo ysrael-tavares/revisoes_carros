@@ -10,8 +10,10 @@ import Modal from "@/Components/Modal.vue";
 import ModalNewCar from "@/Partials/ModalNewCar.vue";
 import ModalOwner from "@/Partials/ModalOwner.vue";
 import {ownerDefault} from "@/Utils/Examples.js";
-import Chart from '@/Components/Charts/Chart.vue'
+import PieChart from '@/Components/Charts/PieChart.vue'
+import LineChart from '@/Components/Charts/LineChart.vue'
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
+import RadarChart from "@/Components/Charts/RadarChart.vue";
 
 export default {
     data: () => {
@@ -27,8 +29,10 @@ export default {
         }
     },
     components: {
+        RadarChart,
         PrimaryTable,
-        Chart,
+        PieChart,
+        LineChart,
         ModalOwner,
         ModalNewCar,
         Modal,
@@ -58,7 +62,6 @@ export default {
             this.showModal = false
             this.owner = ownerDefault
         },
-
         newCar(owner) { // Prepara a edição de um proprietário
             this.owner = {...owner}
             this.showModalCar = true
@@ -110,9 +113,70 @@ export default {
     mounted() {
     },
     computed: {
+        data() {
+            return data
+        },
         formatedOwnerList(){
             return this.returnFormatedRows(this.ownersList)
-        }
+        },
+        optionsChart(){
+            return {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        },
+        dataChartGender(){
+            const listGender = this.ownersListBySex[0]
+            const numberMen = listGender?.Homem.length ?? 0
+            const numberWomen = listGender?.Mulher.length ?? 0
+
+            return {
+                labels: ['Homens', 'Mulheres'],
+                datasets: [
+                    {
+                        label: 'Proprietários(as)',
+                        backgroundColor: ['#1E6495', '#FC036C'],
+                        data: [numberMen, numberWomen]
+                    }
+                ]
+            }
+        },
+        dataChartAge()
+        {
+            const listGender = this.ownersListBySex[0]
+            const numberMen = listGender?.Homem.length ?? 0
+            const numberWomen = listGender?.Mulher.length ?? 0
+
+            let ageList = []
+
+            let result = this.ownersList.map(owner => owner.age)
+            result.sort()
+            result.forEach((atualAge) => {
+                const age = ageList.find(age => atualAge == age.number)
+
+                if(!age)
+                {
+                    ageList.push({
+                        number: atualAge,
+                        count: 1
+                    })
+                }else
+                {
+                    age.count++
+                }
+            })
+
+            return {
+                labels: ageList.map(age => age.number + ' anos'),
+                datasets: [
+                    {
+                        label: 'Proprietários',
+                        backgroundColor: ['#1E6495'],
+                        data: ageList.map(age => age.count)
+                    }
+                ]
+            }
+        },
     }
 }
 </script>
@@ -125,7 +189,28 @@ export default {
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Proprietários</h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-12 space-y-3">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-4 sm:p-8 bg-white shadow">
+                        <header class="flex justify-between">
+                            <div>
+                                <h2 class="text-lg font-medium text-gray-900">Estátisticas de Proprietários</h2>
+                            </div>
+                        </header>
+
+                        <div class="flex flex-col md:flex-row sm:justify-around md:h-48">
+                            <div>
+                                <PieChart :data="dataChartGender" :options="optionsChart" />
+                            </div>
+                            <div>
+                                <LineChart :data="dataChartAge" :options="optionsChart" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-4 sm:p-8 bg-white shadow">
