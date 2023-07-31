@@ -74,17 +74,10 @@ export default {
         {
             this.owner = ownerDefault
             this.showModal = true
-        }
-    },
-    created(){
-        this.getOwners()
-        this.getOwnersBySex()
-    },
-    mounted() {
-    },
-    computed: {
-        formatedOwnerList(){
-            return this.ownersList
+        },
+        returnFormatedRows(rows)
+        {
+            return rows
                 .map(owner => {
                     return [
                         owner.name,
@@ -108,6 +101,17 @@ export default {
                         }
                     ]
                 })
+        }
+    },
+    created(){
+        this.getOwners()
+        this.getOwnersBySex()
+    },
+    mounted() {
+    },
+    computed: {
+        formatedOwnerList(){
+            return this.returnFormatedRows(this.ownersList)
         }
     }
 }
@@ -147,69 +151,16 @@ export default {
                         <PrimaryTable
                             :cols='["Nome", "Email", "Telefone", "Idade", ""]'
                             :rows="formatedOwnerList"
+                            v-if="typeView == 'all'"
                         />
 
-                        <div class="flex flex-col">
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3 mb-3" v-if="typeView == 'by_sex'" v-for="(gender, index) in ownersListBySex[0]">
-                                <h2 class="p-3">{{index}} - Média de Idade: {{ Math.floor(ownersListBySex[1][index]) }} anos</h2>
-                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            Proprietário
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Email
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Telefone
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Idade
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            <span class="sr-only">Edit</span>
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr v-for="owner in gender" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{owner.name}}
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            {{owner.email}}
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            {{owner.phone}}
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            {{owner.age}} Anos
-                                        </td>
-                                        <td class="px-6 py-4 text-right flex justify-between">
-                                            <button
-                                                type="button"
-                                                @click="editOwner(owner)"
-                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                                title="Editar Proprietário"
-                                            >
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                @click="newCar(owner)"
-                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                                title="Cadastrar Carro"
-                                            >
-                                                <i class="fa-solid fa-car"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
+                        <PrimaryTable
+                            v-if="typeView == 'by_sex'"
+                            v-for="(gender, index) in ownersListBySex[0]"
+                            :cols='["Nome", "Email", "Telefone", "Idade", ""]'
+                            :rows="returnFormatedRows(gender)"
+                            :title="`${index} - Média de Idade: ${ Math.floor(ownersListBySex[1][index]) } anos`"
+                        />
                     </div>
                 </div>
             </div>

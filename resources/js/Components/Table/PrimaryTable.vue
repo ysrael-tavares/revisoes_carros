@@ -7,6 +7,7 @@
         />
     </div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
+        <h2 class="p-3" v-if="title">{{title}}</h2>
         <table class="w-full text-sm text-left text-gray-500">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
@@ -67,6 +68,9 @@ export default {
         rows: {
             type: Array,
             default: []
+        },
+        title: {
+            type: String,
         }
     },
     data(){
