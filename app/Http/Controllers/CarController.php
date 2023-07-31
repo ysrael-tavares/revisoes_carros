@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCarRequest;
 use App\Http\Requests\UpdateCarRequest;
 use App\Models\Car;
+use App\Models\Owner;
 
 class CarController extends Controller
 {
@@ -48,6 +49,13 @@ class CarController extends Controller
     public function show(Car $car)
     {
         //
+    }
+
+    public function showByOwners()
+    {
+        return Owner::with('cars')
+            ->orderBy('name')
+            ->get();
     }
 
     /**
