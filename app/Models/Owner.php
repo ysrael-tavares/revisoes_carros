@@ -18,12 +18,19 @@ class Owner extends Model
         'phone',
     ];
 
-    protected $appends = ['age'];
+    protected $appends = ['age', 'revisions'];
 
     public function getAgeAttribute()
     {
         return Carbon::now()->diffInYears($this->date_of_birth);
     }
+
+    public function getRevisionsAttribute()
+    {
+        return Revision::whereIn('car_id', $this->cars->pluck('id'))->get();
+    }
+
+
 
     public function cars()
     {
