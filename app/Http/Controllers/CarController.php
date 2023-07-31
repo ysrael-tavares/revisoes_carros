@@ -58,6 +58,24 @@ class CarController extends Controller
             ->get();
     }
 
+    public function countByGender()
+    {
+        return Owner::with('cars')                      // Carrega as relações com a tabela de carros
+            ->get()                                             // Busca dados na Tabela
+            ->groupBy('gender')                         // Agrupa por Gênero
+            ->map(                                              // Percorre cada Gênero
+                function ($gender){
+                    return $gender
+                        ->map(                                  // Percorre cada proprietário do Gênero
+                            function($owner){
+                                return $owner->cars->count();   // Conta quantos carros cada proprietário tem
+                            }
+                        )
+                        ->sum();                                // Soma os carros dos proprietários
+                }
+            );
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
