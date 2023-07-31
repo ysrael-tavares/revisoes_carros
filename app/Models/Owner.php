@@ -18,7 +18,7 @@ class Owner extends Model
         'phone',
     ];
 
-    protected $appends = ['age', 'revisions'];
+    protected $appends = ['age', 'revisions', 'average_interval_revision', 'next_revision'];
 
     public function getAgeAttribute()
     {
@@ -27,10 +27,40 @@ class Owner extends Model
 
     public function getRevisionsAttribute()
     {
-        return Revision::whereIn('car_id', $this->cars->pluck('id'))->get();
+        return Revision::whereIn('car_id', $this->cars->pluck('id'))
+            ->orderBy('review_day')
+            ->get();
     }
 
+    public function getAverageIntervalRevisionAttribute()
+    {
+        $previous = null;
 
+        $avg = $this->revisions
+            ->map(function ($revision, $index){
+            if($index > 0)
+            {
+                return Carbon::create($revision->review_day)
+                    ->diffInDays($this->revisions[$index-1]->review_day);
+            }
+
+            return 0;
+        })->avg();
+
+
+        return intval($avg);
+    }
+
+    public function getNextRevisionAttribute()
+    {
+        $last_revision = $this->revisions->last();
+
+        if(!$last_revision)
+            return null;
+
+        return Carbon::create($last_revision->review_day)
+            ->addDays($this->average_interval_revision);
+    }
 
     public function cars()
     {

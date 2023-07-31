@@ -14,6 +14,7 @@ import PieChart from '@/Components/Charts/PieChart.vue'
 import LineChart from '@/Components/Charts/LineChart.vue'
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 import RadarChart from "@/Components/Charts/RadarChart.vue";
+import moment from "moment";
 
 export default {
     data: () => {
@@ -26,7 +27,17 @@ export default {
             typeView: 'all',
             searchText: "",
             grid: null,
-            columns: ["Nome", "Email", "Telefone", "Idade", "Carros", "Revisões", ""]
+            columns: [
+                "Nome",
+                "Email",
+                "Telefone",
+                "Idade",
+                "Carros",
+                "Revisões",
+                "Intervalo Médio de Revisão",
+                "Previsão de Revisão",
+                ""
+            ]
         }
     },
     components: {
@@ -90,6 +101,8 @@ export default {
                         owner.age,
                         owner.cars.length,
                         owner.revisions.length,
+                        owner.average_interval_revision + ' dias',
+                        owner.next_revision ? moment(owner.next_revision).format('DD/MM/YYYY') : 'Sem Previsão',
                         {
                             type: 'actions',
                             actions: [
