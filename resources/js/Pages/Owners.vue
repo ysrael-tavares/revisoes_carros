@@ -26,6 +26,7 @@ export default {
             typeView: 'all',
             searchText: "",
             grid: null,
+            columns: ["Nome", "Email", "Telefone", "Idade", "Carros", "Revisões", ""]
         }
     },
     components: {
@@ -87,6 +88,8 @@ export default {
                         owner.email,
                         owner.phone,
                         owner.age,
+                        owner.cars.length,
+                        owner.revisions.length,
                         {
                             type: 'actions',
                             actions: [
@@ -234,7 +237,7 @@ export default {
                         </header>
 
                         <PrimaryTable
-                            :cols='["Nome", "Email", "Telefone", "Idade", ""]'
+                            :cols='columns'
                             :rows="formatedOwnerList"
                             v-if="typeView == 'all'"
                         />
@@ -242,7 +245,7 @@ export default {
                         <PrimaryTable
                             v-if="typeView == 'by_sex'"
                             v-for="(gender, index) in ownersListBySex[0]"
-                            :cols='["Nome", "Email", "Telefone", "Idade", ""]'
+                            :cols='columns'
                             :rows="returnFormatedRows(gender)"
                             :title="`${index} - Média de Idade: ${ Math.floor(ownersListBySex[1][index]) } anos`"
                         />
