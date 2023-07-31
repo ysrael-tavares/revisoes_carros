@@ -29,8 +29,6 @@ export default {
             grid: null,
             columns: [
                 "Nome",
-                "Email",
-                "Telefone",
                 "Idade",
                 "Carros",
                 "Revisões",
@@ -96,8 +94,6 @@ export default {
                 .map(owner => {
                     return [
                         owner.name,
-                        owner.email,
-                        owner.phone,
                         owner.age,
                         owner.cars.length,
                         owner.revisions.length,

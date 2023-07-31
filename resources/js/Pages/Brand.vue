@@ -87,6 +87,8 @@ export default {
                     return [
                         brand.name,
                         brand.number_cars,
+                        brand.number_cars_women,
+                        brand.number_cars_men,
                         brand.total_revisions,
                         {
                             type: 'actions',
@@ -133,7 +135,7 @@ export default {
                         </header>
 
                         <PrimaryTable
-                            :cols="['Nome', 'Carros', 'Revisões feitas', '']"
+                            :cols="['Nome', 'Carros', 'Homens', 'Mulheres', 'Revisões feitas', '']"
                             :rows="formatedBrandList"
                         />
 
