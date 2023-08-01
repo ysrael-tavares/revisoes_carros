@@ -131,7 +131,7 @@
                         Cancelar
                     </PrimaryButton>
 
-                    <PrimaryButton v-if="JSON.stringify(car) !== JSON.stringify(presetCar)">
+                    <PrimaryButton v-if="JSON.stringify(car) !== JSON.stringify(presetCar)" :disabled="isLoading">
                         {{car.id ? "Salvar" : "Cadastrar"}}
                     </PrimaryButton>
                 </div>
@@ -175,7 +175,8 @@ export default {
           errors: {},
           alert: "",
           car: defaultCar,
-          brands: []
+          brands: [],
+          isLoading: false,
       }
     },
     updated() {
@@ -183,13 +184,19 @@ export default {
         this.clearAlerts()
     },
     methods: {
-        sendCar() { // Metodo para envio de proprietário
+        sendCar() { // Metodo para envio de carro
+            if(this.isLoading) return
+
+            this.isLoading = true
 
             this.clearAlerts()
 
             this.car.owner_id = this.owner.id
 
-            if(!this.validateData()) return
+            if(!this.validateData()) {
+                this.isLoading = false
+                return
+            }
 
             const request = this.car.id
                 ? axios
@@ -215,6 +222,7 @@ export default {
                 })
                 .finally(() => {
                     this.$emit('updateRecord')
+                    this.isLoading = false
                 })
         },
         validateData(){

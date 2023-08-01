@@ -34,7 +34,7 @@ class RevisionController extends Controller
     {
         $rules = [
             'car_id' => ['required', 'numeric'],
-            'review_day' => ['required', 'date', 'before_or_equal:'.date('Y-m-d')]
+            'review_day' => ['required', 'date']
         ];
 
         $data = $request->validate($rules);

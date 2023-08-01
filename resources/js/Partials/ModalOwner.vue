@@ -93,7 +93,7 @@
                         Cancelar
                     </PrimaryButton>
 
-                    <PrimaryButton :disabled="owner.processing">
+                    <PrimaryButton :disabled="isLoading">
                         {{owner.id ? "Salvar" : "Cadastrar"}}
                     </PrimaryButton>
                 </div>
@@ -117,6 +117,7 @@ export default {
             owner: ownerDefault,
             errors: {},
             alert: "",
+            isLoading: false
         }
     },
     props: {
@@ -134,7 +135,9 @@ export default {
     },
     methods: {
         sendOwner() { // Metodo para envio de proprietário
+            if(this.isLoading) return
 
+            this.isLoading = true
             this.clearAlerts()
 
             // Verifica se é uma edição ou inserção
@@ -161,6 +164,7 @@ export default {
                 })
                 .finally(() => {
                     this.$emit('updateRecords')
+                    this.isLoading = false
                 })
         },
         clearAlerts() { // Esvazia os alertas

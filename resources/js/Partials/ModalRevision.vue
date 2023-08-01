@@ -12,14 +12,7 @@
                 <div>
                     <InputLabel for="name" value="Informação do Proprietário" />
 
-                    <TextInput
-                        id="name"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="car.owner.name"
-                        required
-                        :readonly="true"
-                    />
+                    <span>{{car.owner.name}}</span>
 
                     <InputError class="mt-2" :message="errors.owner_id" />
                 </div>
@@ -78,7 +71,6 @@
                         type="date"
                         class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
                         v-model="revision.review_day"
-                        :max="new Date().toISOString().split('T')[0]"
                         required
                     />
 
@@ -114,6 +106,7 @@ import InputError from "@/Components/InputError.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
+import {defaultRevision} from "@/Utils/Examples.js";
 
 export default {
     props: {
@@ -137,9 +130,8 @@ export default {
         return {
             errors: {},
             alert: "",
-            revision: {
-                review_date: null
-            }
+            revision: defaultRevision,
+            isLoading: false
         }
     },
     updated() {
@@ -149,6 +141,10 @@ export default {
     methods:{
         sendRevision()
         {
+            if(this.isLoading) return
+
+            this.isLoading = true
+
             this.clearAlerts()
 
             this.revision.car_id = this.car.id
@@ -170,6 +166,7 @@ export default {
             request
                 .then(response => {
                     this.alert = response.data
+                    this.revision = defaultRevision
                     setTimeout(this.closeModal, 2000)
                 })
                 .catch(erro => {
@@ -177,6 +174,7 @@ export default {
                     this.errors = erro.response.data.errors
                 })
                 .finally(() => {
+                    this.isLoading = false
                     this.$emit('updateRecords')
                 })
         },
