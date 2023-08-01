@@ -59,6 +59,9 @@ export default {
         showModal: {
             type: Boolean,
             default: false
+        },
+        newRevision: {
+            type: Function
         }
     },
     computed: {
@@ -76,8 +79,8 @@ export default {
                         actions: [
                             {
                                 title: 'Nova Revisão',
-                                classIcon: "fa-solid fa-clipboard-list",
-                                onClick: () => {}
+                                classIcon: "fa-solid fa-circle-plus",
+                                onClick: () => this.newRevision(car)
                             }
                         ]
                     }
