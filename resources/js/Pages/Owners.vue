@@ -308,7 +308,7 @@ export default {
         </div>
 
         <ModalOwner :showModal="showModal" :closeModal="closeModal" :presetOwner="owner" @updateRecords="getOwners" />
-        <ModalNewCar :showModal="showModalCar" :owner="owner" :closeModal="closeModalCar" />
+        <ModalNewCar :showModal="showModalCar" :owner="owner" :closeModal="closeModalCar" @updateRecords="getOwners" />
         <ModalViewCars
             :showModal="showModalViewCars"
             :closeModal="closeModalViewCar"
