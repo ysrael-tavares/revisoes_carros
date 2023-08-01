@@ -157,6 +157,7 @@ export default {
             request
                 .then(response => {
                     this.alert = response.data
+                    this.owner = ownerDefault
                     setTimeout(this.closeModal, 2000)
                 })
                 .catch(erro => {
