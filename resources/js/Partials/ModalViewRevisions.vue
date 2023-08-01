@@ -2,7 +2,7 @@
     <Modal :show="showModal" maxWidth="5xl">
         <div class="p-4 sm:p-8 bg-white shadow">
             <header>
-                <h2 class="text-lg font-medium text-gray-900">Listagem de Carros</h2>
+                <h2 class="text-lg font-medium text-gray-900">Listagem de Revisões</h2>
 
                 <p class="mt-1 text-sm text-gray-600">
                     Confira os carros do proprietário selecionado
@@ -12,14 +12,14 @@
                 <div>
                     <InputLabel for="name" value="Proprietário" />
 
-                    <span>{{owner.name}}</span>
+                    <span>{{car.name}}</span>
                 </div>
 
                 <div>
                     <InputLabel value="Carros" />
                     <PrimaryTable
-                        :cols="['Marca','Modelo','Placa','Cor','Ano de Fabricação', 'Revisões','']"
-                        :rows="formatedCarList"
+                        :cols="['Data da revisão','Carro','Proprietário']"
+                        :rows="formatedRevisionList"
                     />
                 </div>
 
@@ -46,10 +46,11 @@ import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
 import {defaultRevision} from "@/Utils/Examples.js";
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
+import moment from "moment/moment.js";
 
 export default {
     props: {
-        owner: {
+        car: {
             type: Object,
             default: null,
         },
@@ -62,38 +63,22 @@ export default {
         },
         newRevision: {
             type: Function
-        },
-        viewRevisions: {
-            type: Function
         }
     },
     computed: {
-        formatedCarList(){
-            return this.owner.cars?.map(car => {
-                return [
-                    car.brand.name,
-                    car.model,
-                    car.plate,
-                    car.color,
-                    car.year_of_manufacture,
-                    car.revisions.length,
-                    {
-                        type: 'actions',
-                        actions: [
-                            {
-                                title: 'Nova Revisão',
-                                classIcon: "fa-solid fa-circle-plus",
-                                onClick: () => this.newRevision(car)
-                            },
-                            {
-                                title: 'Ver Revisões',
-                                classIcon: "fa-solid fa-clipboard-list",
-                                onClick: () => this.viewRevisions(car)
-                            }
-                        ]
-                    }
-                ]
-            })
+        formatedRevisionList()
+        {
+            return this.car.revisions
+                .map(revision => {
+                    return [
+                        moment(revision.review_day).format('DD/MM/YYYY'),
+                        this.carName,
+                        this.car.owner.name,
+                    ]
+                })
+        },
+        carName(){
+            return `${this.car.brand.name} ${this.car.model} ${this.car.year_of_manufacture}`
         }
     },
     components: {PrimaryTable, InputSuccess, InputLabel, PrimaryButton, InputError, TableData, Modal, TextInput},
