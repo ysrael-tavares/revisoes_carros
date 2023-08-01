@@ -15,6 +15,7 @@ import LineChart from '@/Components/Charts/LineChart.vue'
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 import RadarChart from "@/Components/Charts/RadarChart.vue";
 import moment from "moment";
+import ModalViewCars from "@/Partials/ModalViewCars.vue";
 
 export default {
     data: () => {
@@ -24,6 +25,7 @@ export default {
             ownersListBySex: [],
             showModal: false,
             showModalCar: false,
+            showModalViewCars: false,
             typeView: 'all',
             searchText: "",
             grid: null,
@@ -39,6 +41,7 @@ export default {
         }
     },
     components: {
+        ModalViewCars,
         RadarChart,
         PrimaryTable,
         PieChart,
@@ -109,14 +112,27 @@ export default {
                                 },
                                 {
                                     title: 'Cadastrar Carro',
-                                    classIcon: "fa-solid fa-car",
+                                    classIcon: "fa-solid fa-circle-plus",
                                     onClick: () => this.newCar(owner)
+                                },
+                                {
+                                    title: 'Ver Carros',
+                                    classIcon: "fa-solid fa-car",
+                                    onClick: () => this.viewCars(owner)
                                 },
                             ]
                         }
                     ]
                 })
-        }
+        },
+        viewCars(owner){
+            console.log(owner)
+            this.owner = {...owner}
+            this.showModalViewCars = true
+        },
+        closeModalViewCar() { // Fecha o modal e esvazia o proprietário
+            this.showModalViewCars = false
+        },
     },
     created(){
         this.getOwners()
@@ -265,5 +281,6 @@ export default {
 
         <ModalOwner :showModal="showModal" :closeModal="closeModal" :presetOwner="owner" @updateRecords="getOwners" />
         <ModalNewCar :showModal="showModalCar" :owner="owner" :closeModal="closeModalCar" />
+        <ModalViewCars :showModal="showModalViewCars" :closeModal="closeModalViewCar" :owner="owner" />
     </AuthenticatedLayout>
 </template>

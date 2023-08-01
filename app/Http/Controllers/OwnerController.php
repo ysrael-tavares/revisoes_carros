@@ -13,7 +13,7 @@ class OwnerController extends Controller
      */
     public function index()
     {
-        return response()->json(Owner::get());
+        return response()->json(Owner::with(['cars.brand', 'cars.revisions'])->get());
     }
 
     /**
