@@ -50,6 +50,12 @@
                     </div>
                 </td>
             </tr>
+            <tr v-if="formatedRows.length == 0">
+                <td class="px-6 py-4 text-center" :colspan="cols.length">
+                    Sem Resultados
+                </td>
+            </tr>
+
             </tbody>
         </table>
     </div>

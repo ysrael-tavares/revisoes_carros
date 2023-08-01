@@ -185,8 +185,8 @@ export default {
         },
         dataChartGender(){
             const listGender = this.ownersListBySex[0]
-            const numberMen = listGender?.Homem.length ?? 0
-            const numberWomen = listGender?.Mulher.length ?? 0
+            const numberMen = listGender?.Homem?.length ?? 0
+            const numberWomen = listGender?.Mulher?.length ?? 0
 
             return {
                 labels: ['Homens', 'Mulheres'],
@@ -202,8 +202,6 @@ export default {
         dataChartAge()
         {
             const listGender = this.ownersListBySex[0]
-            const numberMen = listGender?.Homem.length ?? 0
-            const numberWomen = listGender?.Mulher.length ?? 0
 
             let ageList = []
 
