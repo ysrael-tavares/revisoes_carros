@@ -89,7 +89,7 @@
                         Cancelar
                     </PrimaryButton>
 
-                    <PrimaryButton>
+                    <PrimaryButton v-if="canSave">
                         {{revision.id ? "Salvar" : "Cadastrar"}}
                     </PrimaryButton>
                 </div>
@@ -144,11 +144,13 @@ export default {
             errors: {},
             alert: "",
             revision: {...defaultRevision},
-            isLoading: false
+            isLoading: false,
+            initialRevision: {...defaultRevision}
         }
     },
     updated() {
         this.revision = {...this.presetRevision}
+        this.initialRevision = {...this.presetRevision}
         this.clearAlerts()
     },
     methods:{
@@ -197,8 +199,15 @@ export default {
             this.alert = ""
             this.errors = {}
         },
+        editRevision(revision){
+            this.revision = {...revision}
+            this.initialRevision = {...this.revision}
+        }
     },
     computed: {
+        canSave(){
+            return JSON.stringify(this.initialRevision) != JSON.stringify(this.revision)
+        },
         formatedRevisionList()
         {
             return this.car.revisions
@@ -211,10 +220,15 @@ export default {
                             type: 'actions',
                             actions: [
                                 {
+                                    title: 'Editar Revisão',
+                                    classIcon: "fa-solid fa-pen-to-square",
+                                    onClick: () => this.editRevision(revision)
+                                },
+                                {
                                     title: 'Excluir Revisão',
                                     classIcon: "fa-solid fa-trash-can",
                                     onClick: () => this.deleteRevision(revision)
-                                }
+                                },
                             ]
                         }
                     ]

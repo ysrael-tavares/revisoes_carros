@@ -152,25 +152,17 @@ export default {
                     ]
                 })
         },
-        newRevision(car){
-            this.car = {
-                ...car,
-                owner: {...this.owner}
-            }
-            this.showModalViewCars = false
-            this.showModalRevision = true
-        },
         closeModalRevision() { // Fecha o modal e esvazia o proprietário
             this.showModalRevision = false
-            this.showModalViewCars = true
+            this.showModalCar = true
         },
         viewRevisions(car){
             this.car = {
                 ...car,
                 owner: {...this.owner}
             }
-            this.showModalViewCars = false
-            this.showModalViewRevisions = true
+            this.showModalCar = false
+            this.showModalRevision = true
         },
         deleteCar(car){
             this.car = {...car, owner: this.owner}
@@ -192,13 +184,13 @@ export default {
                 }
             }
 
-            this.showModalViewRevisions = false
+            this.showModalRevision = false
             this.showModalDeleteRevision = true
         },
         closeModalDeleteRevision(){
             this.revision = {...defaultRevision}
 
-            this.showModalViewRevisions = true
+            this.showModalRevision = true
             this.showModalDeleteRevision = false
         },
     },
@@ -361,7 +353,7 @@ export default {
             :showModal="showModalCar"
             :owner="owner"
             :closeModal="closeModalCar"
-            :viewRevisions="newRevision"
+            :viewRevisions="viewRevisions"
             :deleteCar="deleteCar"
             @updateOwner="updateOwner"
         />
