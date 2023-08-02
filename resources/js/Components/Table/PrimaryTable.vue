@@ -7,7 +7,7 @@
         />
     </div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-        <h2 class="p-3" v-if="title">{{title}}</h2>
+        <h2 class="p-3" v-if="titleTable">{{titleTable}}</h2>
         <table class="w-full text-sm text-left text-gray-500">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
@@ -130,6 +130,10 @@ export default {
                     // Caso não seja uma data, compara String || Number
                     return isAsc * (a[this.columnSort] > b[this.columnSort] ? 1 : -1)
                 })
+        },
+        titleTable()
+        {
+            return this.title ?? `Todos (${this.rows.length})`
         }
     }
 }
