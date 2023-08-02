@@ -91,8 +91,6 @@ export default {
 
             const selectedCar = this.owner.cars.find(car => car.id == this.car.id)
 
-            console.log(selectedCar)
-
             if(selectedCar) this.car = {...selectedCar}
         },
         clearData(){

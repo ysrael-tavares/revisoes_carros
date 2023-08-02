@@ -13,7 +13,21 @@ class RevisionController extends Controller
     public function index()
     {
         return response()->json(
-            Revision::with('car.owner', 'car.brand')
+            Revision::with(
+                [
+                    'car' => [
+                        'owner' => [
+                            'cars' => [
+                                'brand',
+                                'revisions',
+                                'owner'
+                            ]
+                        ],
+                        'brand',
+                        'revisions',
+                    ]
+                ]
+            )
                 ->orderBy('review_day', 'desc')
                 ->get()
         );
@@ -104,7 +118,9 @@ class RevisionController extends Controller
                                         'revisions',
                                         'owner'
                                     ]
-                                ]
+                                ],
+                                'brand',
+                                'revisions',
                             ]
                         ]
                     ),

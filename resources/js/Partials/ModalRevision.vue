@@ -180,6 +180,7 @@ export default {
 
                     this.$emit('updateOwner', response.data.content.car.owner)
                     this.$emit('updateCar', response.data.content.car)
+                    this.$emit('updateRevision', response.data.content)
                 })
                 .catch(erro => {
                     console.log(erro)
@@ -211,7 +212,7 @@ export default {
         }
     },
     components: {PrimaryTable, InputSuccess, InputLabel, PrimaryButton, InputError, TableData, Modal, TextInput},
-    emits: ['updateOwner', 'updateCar'],
+    emits: ['updateOwner', 'updateCar', 'updateRevision'],
 
 }
 </script>

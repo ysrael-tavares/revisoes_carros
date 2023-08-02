@@ -49,6 +49,15 @@ export default {
         closeModal(){ // Fecha o modal e esvazia a revisão
             this.showModal = false
             this.revision = {...defaultRevision}
+        },
+        updateRevision(revisionAffected)
+        {
+            this.revisionsList = [
+                ...this.revisionsList.filter(revision => revision.id != revisionAffected.id),
+                revisionAffected
+            ]
+
+            if(this.revision.id == revisionAffected.id) this.revision = {...revisionAffected}
         }
     },
     created(){
@@ -117,7 +126,7 @@ export default {
             :showModal="showModal"
             :closeModal="closeModal"
             :presetRevision="revision"
-            @updateRecords="getRevisions"
+            @updateRevision="updateRevision"
         />
     </AuthenticatedLayout>
 </template>
