@@ -52,7 +52,9 @@ class RevisionController extends Controller
                                     'revisions',
                                     'owner'
                                 ]
-                            ]
+                            ],
+                            'brand',
+                            'revisions',
                         ]
                     ]
                 ),

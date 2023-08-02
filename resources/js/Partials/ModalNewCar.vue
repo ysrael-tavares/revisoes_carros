@@ -17,8 +17,8 @@
                     </span>
                 </div>
 
-                <PrimaryButton @click="toggleRegister">
-                    {{isRegister ? "Ocultar Cadastro" : "Cadastrar Carro"}}
+                <PrimaryButton @click="toggleRegister" v-if="showAdditionalTable">
+                    {{ textButton }}
                 </PrimaryButton>
 
                 <InputError class="mt-2" :message="errors.owner_id" />
@@ -129,12 +129,20 @@
                 </div>
 
                 <div class="flex items-center gap-4">
+                    <PrimaryButton
+                        v-if="!showAdditionalTable"
+                        type="button"
+                        @click="closeModal"
+                        class="bg-red-700 hover:bg-red-600">
+                        Cancelar
+                    </PrimaryButton>
+
                     <PrimaryButton v-if="JSON.stringify(car) !== JSON.stringify(presetCar)" :disabled="isLoading">
                         {{car.id ? "Salvar" : "Cadastrar"}}
                     </PrimaryButton>
                 </div>
             </form>
-            <div class="mt-6 space-y-6">
+            <div class="mt-6 space-y-6" v-if="showAdditionalTable">
                 <InputLabel value="Carros" />
                 <PrimaryTable
                     :cols="['Marca','Modelo','Placa','Cor','Ano de Fabricação', 'Revisões','']"
@@ -144,6 +152,7 @@
 
             <div class="mt-6">
                 <PrimaryButton
+                    v-if="showAdditionalTable"
                     type="button"
                     @click="closeModal"
                     class="bg-red-700 hover:bg-red-600">
@@ -187,6 +196,14 @@ export default {
         viewRevisions: {
             type: Function
         },
+        defaultShowRegister: {
+            type: Boolean,
+            default: false
+        },
+        showAdditionalTable: {
+            type: Boolean,
+            default: true
+        }
     },
     data(){
       return {
@@ -195,7 +212,7 @@ export default {
           car: defaultCar,
           brands: [],
           isLoading: false,
-          isRegister: false,
+          isRegister: this.defaultShowRegister,
       }
     },
     updated() {
@@ -203,6 +220,11 @@ export default {
         this.clearAlerts()
     },
     computed:{
+        textButton(){
+            return this.isRegister
+                ? "Ocultar " : "Exibir " + (this.car.id ? "Edição" : "Cadastro")
+
+        },
         formatedCarList(){
             return this.owner.cars?.map(car => {
                 return [

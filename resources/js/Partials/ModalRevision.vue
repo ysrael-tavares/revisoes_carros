@@ -179,6 +179,7 @@ export default {
                     this.revision = defaultRevision
 
                     this.$emit('updateOwner', response.data.content.car.owner)
+                    this.$emit('updateCar', response.data.content.car)
                 })
                 .catch(erro => {
                     console.log(erro)
@@ -210,7 +211,7 @@ export default {
         }
     },
     components: {PrimaryTable, InputSuccess, InputLabel, PrimaryButton, InputError, TableData, Modal, TextInput},
-    emits: ['updateOwner'],
+    emits: ['updateOwner', 'updateCar'],
 
 }
 </script>

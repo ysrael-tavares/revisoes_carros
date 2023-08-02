@@ -60,6 +60,8 @@ export default {
                 ...this.carsList.filter(car => car.id != carAffected.id),
                 carAffected
             ]
+
+            if(this.car.id == carAffected.id) this.car = {...carAffected}
         },
         closeModal(){ // Fecha o modal e esvazia o carro
             this.showModal = false
@@ -147,6 +149,8 @@ export default {
             :owner="car.owner"
             :showModal="showModal"
             :closeModal="closeModal"
+            :defaultShowRegister="true"
+            :showAdditionalTable="false"
             @updateCar="updateCar"
         />
 
@@ -154,7 +158,7 @@ export default {
             :showModal="showModalRevision"
             :car="car"
             :closeModal="closeModalRevision"
-            @updateRecords="getCars"
+            @updateCar="updateCar"
         />
     </AuthenticatedLayout>
 </template>
