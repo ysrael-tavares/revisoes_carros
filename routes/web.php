@@ -75,6 +75,7 @@ Route::middleware('auth')->group(callback: function (){
         Route::get('/revision', 'index')->name('revision.all');
         Route::post('/revision', 'store')->name('revision.store');
         Route::patch('/revision/{revision}', 'update')->name('revision.update');
+        Route::delete('/revision/{revision}', 'destroy')->name('revision.destroy');
     });
 
 });

@@ -12,7 +12,7 @@
                 <div>
                     <InputLabel for="name" value="Informação do Proprietário" />
 
-                    <span>{{car.owner.name}}</span>
+                    <span>{{car?.owner?.name}}</span>
 
                     <InputError class="mt-2" :message="errors.owner_id" />
                 </div>
@@ -98,7 +98,7 @@
             <div class="mt-6">
                 <InputLabel value="Revisões Cadastradas" />
                 <PrimaryTable
-                    :cols="['Data da revisão','Carro','Proprietário']"
+                    :cols="['Data da revisão','Carro','Proprietário', '']"
                     :rows="formatedRevisionList"
                 />
             </div>
@@ -134,13 +134,16 @@ export default {
         presetRevision: {
             type: Object,
             default: null,
-        }
+        },
+        deleteRevision: {
+            type: Function,
+        },
     },
     data: () => {
         return {
             errors: {},
             alert: "",
-            revision: defaultRevision,
+            revision: {...defaultRevision},
             isLoading: false
         }
     },
@@ -204,6 +207,16 @@ export default {
                         moment(revision.review_day).format('DD/MM/YYYY'),
                         this.carName,
                         this.car.owner.name,
+                        {
+                            type: 'actions',
+                            actions: [
+                                {
+                                    title: 'Excluir Revisão',
+                                    classIcon: "fa-solid fa-trash-can",
+                                    onClick: () => this.deleteRevision(revision)
+                                }
+                            ]
+                        }
                     ]
                 })
         },

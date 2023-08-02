@@ -135,6 +135,21 @@ class RevisionController extends Controller
      */
     public function destroy(Revision $revision)
     {
-        //
+        $owner = $revision->car->owner;
+
+        if($revision->delete())
+        {
+            return response()->json([
+                'content' => [
+                    'owner' => $owner->load(['cars.brand', 'cars.revisions']),
+                    'revision_id' => $revision->id
+                ],
+                'message' => "Revisão Excluída"
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Não foi possível excluir a revisão'
+        ]);
     }
 }

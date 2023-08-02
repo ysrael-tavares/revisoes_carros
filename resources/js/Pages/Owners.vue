@@ -5,11 +5,9 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import InputSuccess from "@/Components/InputSuccess.vue";
-import Modal from "@/Components/Modal.vue";
 import ModalNewCar from "@/Partials/ModalNewCar.vue";
 import ModalOwner from "@/Partials/ModalOwner.vue";
-import {defaultCar, ownerDefault} from "@/Utils/Examples.js";
+import {defaultCar, defaultRevision, ownerDefault} from "@/Utils/Examples.js";
 import PieChart from '@/Components/Charts/PieChart.vue'
 import LineChart from '@/Components/Charts/LineChart.vue'
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
@@ -18,12 +16,14 @@ import moment from "moment";
 import ModalRevision from "@/Partials/ModalRevision.vue";
 import ModalViewRevisions from "@/Partials/ModalViewRevisions.vue";
 import ModalDeleteCar from "@/Partials/ModalDeleteCar.vue";
+import ModalDeleteRevision from "@/Partials/ModalDeleteRevision.vue";
 
 export default {
     data: () => {
         return {
             owner: {...ownerDefault},
-            car: defaultCar,
+            car: {...defaultCar},
+            revision: {...defaultRevision},
             ownersList: [],
             ownersListBySex: [],
             showModal: false,
@@ -32,6 +32,7 @@ export default {
             showModalRevision: false,
             showModalViewRevisions: false,
             showModalDeleteCar: false,
+            showModalDeleteRevision: false,
             searchingData: false,
             typeView: 'all',
             searchText: "",
@@ -48,6 +49,7 @@ export default {
         }
     },
     components: {
+        ModalDeleteRevision,
         ModalViewRevisions,
         ModalRevision,
         RadarChart,
@@ -94,7 +96,7 @@ export default {
 
             const selectedCar = this.owner.cars?.find(car => car.id == this.car.id)
 
-            if(selectedCar) this.car = {...selectedCar}
+            if(selectedCar) this.car = {...selectedCar, owner: {...ownerAffected}}
 
             this.getOwnersBySex()
         },
@@ -181,7 +183,24 @@ export default {
 
             this.showModalViewCars = true
             this.showModalDeleteCar = false
-        }
+        },
+        deleteRevision(revision){
+            this.revision = {
+                ...revision,
+                car: {
+                    ...this.car
+                }
+            }
+
+            this.showModalViewRevisions = false
+            this.showModalDeleteRevision = true
+        },
+        closeModalDeleteRevision(){
+            //this.revision = {...defaultRevision}
+
+            this.showModalViewRevisions = true
+            this.showModalDeleteRevision = false
+        },
     },
     created(){
         this.getOwners()
@@ -190,12 +209,6 @@ export default {
     mounted() {
     },
     computed: {
-        defaultCar() {
-            return defaultCar
-        },
-        data() {
-            return data
-        },
         formatedOwnerList(){
             return this.returnFormatedRows(this.ownersList)
         },
@@ -356,6 +369,7 @@ export default {
             :showModal="showModalRevision"
             :car="car"
             :closeModal="closeModalRevision"
+            :deleteRevision="deleteRevision"
             @updateOwner="updateOwner"
         />
 
@@ -365,6 +379,14 @@ export default {
             :closeModal="closeModalDeleteCar"
             @deleteCar="closeModalDeleteCar"
             @updateOwner="updateOwner"
+        />
+
+        <ModalDeleteRevision
+            :showModal="showModalDeleteRevision"
+            :revision="revision"
+            :closeModal="closeModalDeleteRevision"
+            @updateOwner="updateOwner"
+            @deleteRevision="closeModalDeleteRevision"
         />
     </AuthenticatedLayout>
 </template>
