@@ -176,7 +176,7 @@ export default {
             this.showModalViewCars = false
             this.showModalDeleteCar = true
         },
-        deleteCarSuccess(){
+        closeModalDeleteCar(){
             this.car = {...defaultCar}
 
             this.showModalViewCars = true
@@ -362,7 +362,8 @@ export default {
         <ModalDeleteCar
             :showModal="showModalDeleteCar"
             :car="car"
-            @deleteCar="deleteCarSuccess"
+            :closeModal="closeModalDeleteCar"
+            @deleteCar="closeModalDeleteCar"
             @updateOwner="updateOwner"
         />
     </AuthenticatedLayout>

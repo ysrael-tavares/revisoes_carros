@@ -101,6 +101,7 @@ export default {
       }
     },
     updated() {
+        this.confirmDelete = false
         this.clearAlerts()
     },
     computed:{

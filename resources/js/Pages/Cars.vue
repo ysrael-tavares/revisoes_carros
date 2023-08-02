@@ -83,7 +83,7 @@ export default {
 
             this.showModalDeleteCar = true
         },
-        deleteCarSuccess(car_id){
+        closeModalDeleteCar(car_id = null){
             this.car = {...defaultCar}
 
             this.carsList = this.carsList.filter(car => car.id != car_id)
@@ -184,7 +184,8 @@ export default {
         <ModalDeleteCar
             :showModal="showModalDeleteCar"
             :car="car"
-            @deleteCar="deleteCarSuccess"
+            :closeModal="closeModalDeleteCar"
+            @deleteCar="closeModalDeleteCar"
         />
     </AuthenticatedLayout>
 </template>
