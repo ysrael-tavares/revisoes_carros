@@ -17,6 +17,7 @@ import ModalRevision from "@/Partials/ModalRevision.vue";
 import ModalViewRevisions from "@/Partials/ModalViewRevisions.vue";
 import ModalDeleteCar from "@/Partials/ModalDeleteCar.vue";
 import ModalDeleteRevision from "@/Partials/ModalDeleteRevision.vue";
+import ModalDeleteOwner from "@/Partials/ModalDeleteOwner.vue";
 
 export default {
     data: () => {
@@ -33,6 +34,7 @@ export default {
             showModalViewRevisions: false,
             showModalDeleteCar: false,
             showModalDeleteRevision: false,
+            showModalDeleteOwner: false,
             searchingData: false,
             typeView: 'all',
             searchText: "",
@@ -59,6 +61,7 @@ export default {
         ModalOwner,
         ModalNewCar,
         ModalDeleteCar,
+        ModalDeleteOwner,
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
@@ -138,14 +141,19 @@ export default {
                             type: 'actions',
                             actions: [
                                 {
+                                    title: 'Carros',
+                                    classIcon: "fa-solid fa-car",
+                                    onClick: () => this.newCar(owner)
+                                },
+                                {
                                     title: 'Editar Proprietário',
                                     classIcon: "fa-solid fa-pen-to-square",
                                     onClick: () => this.editOwner(owner)
                                 },
                                 {
-                                    title: 'Carros',
-                                    classIcon: "fa-solid fa-car",
-                                    onClick: () => this.newCar(owner)
+                                    title: 'Excluir Proprietário',
+                                    classIcon: "fa-solid fa-trash-can",
+                                    onClick: () => this.deleteOwner(owner)
                                 },
                             ]
                         }
@@ -193,6 +201,20 @@ export default {
             this.showModalRevision = true
             this.showModalDeleteRevision = false
         },
+        deleteOwner(owner)
+        {
+            this.owner = {...owner}
+            this.showModalDeleteOwner = true
+        },
+        closeModalDeleteOwner(owner_id = null)
+        {
+            this.owner = {...ownerDefault}
+
+            this.ownersList = this.ownersList.filter(owner => owner.id != owner_id)
+            if(owner_id) this.getOwnersBySex()
+
+            this.showModalDeleteOwner = false
+        }
     },
     created(){
         this.getOwners()
@@ -379,6 +401,13 @@ export default {
             :closeModal="closeModalDeleteRevision"
             @updateOwner="updateOwner"
             @deleteRevision="closeModalDeleteRevision"
+        />
+
+        <ModalDeleteOwner
+            :showModal="showModalDeleteOwner"
+            :owner="owner"
+            :closeModal="closeModalDeleteOwner"
+            @deleteOwner="closeModalDeleteOwner"
         />
     </AuthenticatedLayout>
 </template>

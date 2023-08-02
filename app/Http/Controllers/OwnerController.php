@@ -99,6 +99,28 @@ class OwnerController extends Controller
      */
     public function destroy(Owner $owner)
     {
-        //
+        foreach($owner->cars as $car)
+        {
+            foreach ($car->revisions as $revision)
+            {
+                $revision->delete();
+            }
+
+            $car->delete();
+        }
+
+        if($owner->delete())
+        {
+            return response()->json([
+                'content' => [
+                    'owner_id' => $owner->id,
+                ],
+                'message' => "Proprietário Excluído"
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Não foi possível excluir o proprietário'
+        ]);
     }
 }
