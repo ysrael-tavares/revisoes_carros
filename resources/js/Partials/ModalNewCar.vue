@@ -183,7 +183,10 @@ export default {
         },
         closeModal: {
             type: Function
-        }
+        },
+        viewRevisions: {
+            type: Function
+        },
     },
     data(){
       return {
@@ -212,11 +215,6 @@ export default {
                     {
                         type: 'actions',
                         actions: [
-                            {
-                                title: 'Nova Revisão',
-                                classIcon: "fa-solid fa-circle-plus",
-                                onClick: () => this.newRevision(car)
-                            },
                             {
                                 title: 'Ver Revisões',
                                 classIcon: "fa-solid fa-clipboard-list",

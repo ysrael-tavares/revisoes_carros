@@ -94,6 +94,14 @@
                     </PrimaryButton>
                 </div>
             </form>
+
+            <div class="mt-6">
+                <InputLabel value="Revisões Cadastradas" />
+                <PrimaryTable
+                    :cols="['Data da revisão','Carro','Proprietário']"
+                    :rows="formatedRevisionList"
+                />
+            </div>
         </div>
     </Modal>
 </template>
@@ -107,6 +115,8 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
 import {defaultRevision} from "@/Utils/Examples.js";
+import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
+import moment from "moment";
 
 export default {
     props: {
@@ -165,9 +175,10 @@ export default {
             // Processa a requisição
             request
                 .then(response => {
-                    this.alert = response.data
+                    this.alert = response.data.message
                     this.revision = defaultRevision
-                    setTimeout(this.closeModal, 2000)
+
+                    this.$emit('updateOwner', response.data.content.car.owner)
                 })
                 .catch(erro => {
                     console.log(erro)
@@ -175,7 +186,6 @@ export default {
                 })
                 .finally(() => {
                     this.isLoading = false
-                    this.$emit('updateRecords')
                 })
         },
         clearAlerts(){ // Esvazia os alertas
@@ -183,8 +193,24 @@ export default {
             this.errors = {}
         },
     },
-    components: {InputSuccess, InputLabel, PrimaryButton, InputError, TableData, Modal, TextInput},
-    emits: ['updateRecords'],
+    computed: {
+        formatedRevisionList()
+        {
+            return this.car.revisions
+                .map(revision => {
+                    return [
+                        moment(revision.review_day).format('DD/MM/YYYY'),
+                        this.carName,
+                        this.car.owner.name,
+                    ]
+                })
+        },
+        carName(){
+            return `${this.car.brand.name} ${this.car.model} ${this.car.year_of_manufacture}`
+        }
+    },
+    components: {PrimaryTable, InputSuccess, InputLabel, PrimaryButton, InputError, TableData, Modal, TextInput},
+    emits: ['updateOwner'],
 
 }
 </script>

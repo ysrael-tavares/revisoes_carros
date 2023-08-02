@@ -9,13 +9,12 @@ import InputSuccess from "@/Components/InputSuccess.vue";
 import Modal from "@/Components/Modal.vue";
 import ModalNewCar from "@/Partials/ModalNewCar.vue";
 import ModalOwner from "@/Partials/ModalOwner.vue";
-import {defaultCar, ownerDefault, ownerExample} from "@/Utils/Examples.js";
+import {defaultCar, ownerDefault} from "@/Utils/Examples.js";
 import PieChart from '@/Components/Charts/PieChart.vue'
 import LineChart from '@/Components/Charts/LineChart.vue'
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 import RadarChart from "@/Components/Charts/RadarChart.vue";
 import moment from "moment";
-import ModalViewCars from "@/Partials/ModalViewCars.vue";
 import ModalRevision from "@/Partials/ModalRevision.vue";
 import ModalViewRevisions from "@/Partials/ModalViewRevisions.vue";
 
@@ -49,15 +48,12 @@ export default {
     components: {
         ModalViewRevisions,
         ModalRevision,
-        ModalViewCars,
         RadarChart,
         PrimaryTable,
         PieChart,
         LineChart,
         ModalOwner,
         ModalNewCar,
-        Modal,
-        InputSuccess,
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
@@ -92,6 +88,12 @@ export default {
             ]
 
             if(this.owner.id == ownerAffected.id) this.owner = {...ownerAffected}
+
+            const selectedCar = this.owner.cars.find(car => car.id == this.car.id)
+
+            console.log(selectedCar)
+
+            if(selectedCar) this.car = {...selectedCar}
         },
         clearData(){
             this.owner = {...ownerDefault}
@@ -144,10 +146,6 @@ export default {
                         }
                     ]
                 })
-        },
-        viewCars(owner){
-            this.owner = {...owner}
-            this.showModalViewCars = true
         },
         closeModalViewCar() { // Fecha o modal e esvazia o proprietário
             this.showModalViewCars = false
@@ -332,21 +330,14 @@ export default {
             :showModal="showModalCar"
             :owner="owner"
             :closeModal="closeModalCar"
+            :viewRevisions="newRevision"
             @updateOwner="updateOwner"
-        />
-        <ModalViewCars
-            :showModal="showModalViewCars"
-            :closeModal="closeModalViewCar"
-            :owner="owner"
-            :newRevision="newRevision"
-            :viewRevisions="viewRevisions"
         />
         <ModalRevision
             :showModal="showModalRevision"
             :car="car"
             :closeModal="closeModalRevision"
-            @updateRecords="getOwners"
+            @updateOwner="updateOwner"
         />
-        <ModalViewRevisions :showModal="showModalViewRevisions" :closeModal="closeModalViewRevision" :car="car" />
     </AuthenticatedLayout>
 </template>

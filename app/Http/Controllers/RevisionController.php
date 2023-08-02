@@ -41,9 +41,25 @@ class RevisionController extends Controller
 
         $revision = Revision::create($data);
 
-        if($revision) return response()->json('Revisão inserida', 201);
+        if($revision) return response()->json(
+            [
+                'content' => $revision->load(
+                    [
+                        'car' => [
+                            'owner' => [
+                                'cars' => [
+                                    'brand',
+                                    'revisions',
+                                    'owner'
+                                ]
+                            ]
+                        ]
+                    ]
+                ),
+                'message' => 'Revisão inserida'
+            ], 201);
 
-        return response()->json('Erro ao inserir revisão');
+        return response()->json(['message' => 'Erro ao inserir revisão']);
     }
 
     /**
@@ -75,7 +91,23 @@ class RevisionController extends Controller
         $data = $request->validate($rules);
 
         if($revision->update($data))
-            return response()->json('Revisão Alterada', 201);
+            return response()->json(
+                [
+                    'content' => $revision->load(
+                        [
+                            'car' => [
+                                'owner' => [
+                                    'cars' => [
+                                        'brand',
+                                        'revisions',
+                                        'owner'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ),
+                    'message' => 'Revisão Alterada'
+                ], 201);
 
         return response()->json('Erro ao alterar revisão');
     }
