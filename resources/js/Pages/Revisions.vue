@@ -11,17 +11,20 @@ import moment from "moment";
 import ModalRevision from "@/Partials/ModalRevision.vue";
 import {defaultRevision} from "@/Utils/Examples.js";
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
+import ModalDeleteRevision from "@/Partials/ModalDeleteRevision.vue";
 
 export default {
     data: () => {
         return {
-            revision: defaultRevision,
+            revision: {...defaultRevision},
             revisionsList: [],
             showModal: false,
+            showModalDeleteRevision: false,
             searchingData: false,
         }
     },
     components: {
+        ModalDeleteRevision,
         PrimaryTable,
         ModalRevision,
         Modal,
@@ -58,7 +61,21 @@ export default {
             ]
 
             if(this.revision.id == revisionAffected.id) this.revision = {...revisionAffected}
-        }
+        },
+        deleteRevision(revision){
+            this.revision = {
+                ...revision,
+            }
+
+            this.showModalDeleteRevision = true
+        },
+        closeModalDeleteRevision(revision_id = null){
+            this.revision = {...defaultRevision}
+
+            this.revisionsList = this.revisionsList.filter(revision => revision.id != revision_id)
+
+            this.showModalDeleteRevision = false
+        },
     },
     created(){
         this.getRevisions()
@@ -79,6 +96,11 @@ export default {
                                     title: 'Editar Revisão',
                                     classIcon: "fa-solid fa-pen-to-square",
                                     onClick: () => this.editRevision(revision)
+                                },
+                                {
+                                    title: 'Excluir Revisão',
+                                    classIcon: "fa-solid fa-trash-can",
+                                    onClick: () => this.deleteRevision(revision)
                                 }
                             ]
                         }
@@ -127,6 +149,13 @@ export default {
             :closeModal="closeModal"
             :presetRevision="revision"
             @updateRevision="updateRevision"
+        />
+
+        <ModalDeleteRevision
+            :showModal="showModalDeleteRevision"
+            :revision="revision"
+            :closeModal="closeModalDeleteRevision"
+            @deleteRevision="closeModalDeleteRevision"
         />
     </AuthenticatedLayout>
 </template>

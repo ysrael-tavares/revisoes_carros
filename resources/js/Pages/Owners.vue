@@ -196,7 +196,7 @@ export default {
             this.showModalDeleteRevision = true
         },
         closeModalDeleteRevision(){
-            //this.revision = {...defaultRevision}
+            this.revision = {...defaultRevision}
 
             this.showModalViewRevisions = true
             this.showModalDeleteRevision = false
