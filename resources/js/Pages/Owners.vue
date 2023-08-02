@@ -89,9 +89,11 @@ export default {
 
             if(this.owner.id == ownerAffected.id) this.owner = {...ownerAffected}
 
-            const selectedCar = this.owner.cars.find(car => car.id == this.car.id)
+            const selectedCar = this.owner.cars?.find(car => car.id == this.car.id)
 
             if(selectedCar) this.car = {...selectedCar}
+
+            this.getOwnersBySex()
         },
         clearData(){
             this.owner = {...ownerDefault}

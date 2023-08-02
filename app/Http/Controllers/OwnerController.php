@@ -21,7 +21,7 @@ class OwnerController extends Controller
      */
     public function by_sex()
     {
-        $genders = Owner::get()->groupBy('gender');
+        $genders = Owner::with(['cars.brand', 'cars.revisions'])->get()->groupBy('gender');
 
         $separated = $genders->map(function ($gender){
             return $gender->avg('age');
