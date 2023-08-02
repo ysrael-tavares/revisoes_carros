@@ -156,10 +156,11 @@ export default {
             // Processa a requisição
             request
                 .then(response => {
-                    this.alert = response.data
+                    this.alert = response.data.message
 
                     setTimeout(() => {
                         this.$emit('clearData')
+                        this.$emit('updateOwner', response.data.content)
                         this.closeModal()
                     }, 2000)
                 })
@@ -167,7 +168,6 @@ export default {
                     this.errors = erro.response.data.errors
                 })
                 .finally(() => {
-                    this.$emit('updateRecords')
                     this.isLoading = false
                 })
         },
@@ -181,7 +181,7 @@ export default {
         this.owner = this.presetOwner
         this.clearAlerts()
     },
-    emits: ['updateRecords', 'clearData'],
+    emits: ['updateOwner', 'clearData'],
     components: {InputSuccess, InputLabel, PrimaryButton, InputError, Modal, TextInput}
 
 }

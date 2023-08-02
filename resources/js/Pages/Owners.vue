@@ -85,6 +85,12 @@ export default {
             this.owner = {...owner}
             this.showModal = true
         },
+        updateOwner(ownerAffected){
+            this.ownersList = [
+                ...this.ownersList.filter(owner => owner.id != ownerAffected.id),
+                ownerAffected
+            ]
+        },
         clearData(){
             this.owner = {...ownerDefault}
         },
@@ -322,6 +328,7 @@ export default {
             :showModal="showModal"
             :closeModal="closeModal"
             :presetOwner="owner"
+            @updateOwner="updateOwner"
             @clearData="clearData"
         />
         <ModalNewCar

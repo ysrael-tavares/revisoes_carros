@@ -50,7 +50,14 @@ class OwnerController extends Controller
     {
         $owner = Owner::create($request->validated());
 
-        if($owner) return response()->json('Proprietário inserido', 201);
+        if($owner){
+            return response()->json(
+                [
+                    'content' => $owner->load(['cars.brand', 'cars.revisions']),
+                    'message' => 'Proprietário inserido'
+                ]
+                , 201);
+        }
 
         return response()->json('Erro ao inserir proprietário');
     }
@@ -76,8 +83,13 @@ class OwnerController extends Controller
      */
     public function update(UpdateOwnerRequest $request, Owner $owner)
     {
-        if($owner->update($request->validated()))
-            return response()->json('Proprietário Alterado', 201);
+        if($owner->update($request->validated())){
+
+            return response()->json([
+                'content' => $owner->load(['cars.brand', 'cars.revisions']),
+                'message' => 'Proprietário Alterado'
+            ], 201);
+        }
 
         return response()->json('Erro ao alterar proprietário');
     }
