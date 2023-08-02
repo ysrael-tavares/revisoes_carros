@@ -12,6 +12,7 @@ import Modal from "@/Components/Modal.vue";
 import {defaultCar} from "@/Utils/Examples.js";
 import ModalRevision from "@/Partials/ModalRevision.vue";
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
+import ModalDeleteCar from "@/Partials/ModalDeleteCar.vue";
 
 export default {
     props:{
@@ -25,10 +26,12 @@ export default {
             carsList: [],
             showModal: false,
             showModalRevision: false,
+            showModalDeleteCar: false,
             searchingData: false,
         }
     },
     components: {
+        ModalDeleteCar,
         PrimaryTable,
         ModalRevision,
         Modal,
@@ -75,6 +78,18 @@ export default {
             this.showModalRevision = false
             this.car = {...defaultCar}
         },
+        deleteCar(car){
+            this.car = {...car}
+
+            this.showModalDeleteCar = true
+        },
+        deleteCarSuccess(car_id){
+            this.car = {...defaultCar}
+
+            this.carsList = this.carsList.filter(car => car.id != car_id)
+
+            this.showModalDeleteCar = false
+        }
     },
     created(){
         this.getCars()
@@ -102,6 +117,11 @@ export default {
                                 title: 'Nova Revisão',
                                 classIcon: "fa-solid fa-clipboard-list",
                                 onClick: () => this.newRevision(car)
+                            },
+                            {
+                                title: 'Excluir Carro',
+                                classIcon: "fa-solid fa-trash-can",
+                                onClick: () => this.deleteCar(car)
                             }
                         ]
                     }
@@ -159,6 +179,12 @@ export default {
             :car="car"
             :closeModal="closeModalRevision"
             @updateCar="updateCar"
+        />
+
+        <ModalDeleteCar
+            :showModal="showModalDeleteCar"
+            :car="car"
+            @deleteCar="deleteCarSuccess"
         />
     </AuthenticatedLayout>
 </template>
