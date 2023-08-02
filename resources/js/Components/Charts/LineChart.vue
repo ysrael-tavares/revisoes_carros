@@ -13,8 +13,9 @@ import {
     CategoryScale,
     LinearScale
 } from 'chart.js'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels)
 
 export default {
     name: 'BarChart',
@@ -27,7 +28,8 @@ export default {
             type: Object,
             default: {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                plugins: [ChartDataLabels]
             }
         }
     }
