@@ -213,15 +213,19 @@ export default {
             // Processa a requisição
             request
                 .then(response => {
-                    this.alert = response.data
+                    this.alert = response.data.message
                     this.car = {...defaultCar}
-                    setTimeout(this.closeModal, 2000)
+
+                    setTimeout(() => {
+                        this.$emit('updateOwner', response.data.content.owner)
+                        this.$emit('updateCar', response.data.content.car)
+                        this.closeModal()
+                    }, 2000)
                 })
                 .catch(erro => {
                     this.errors = erro.response.data.errors
                 })
                 .finally(() => {
-                    this.$emit('updateRecords')
                     this.isLoading = false
                 })
         },
@@ -246,7 +250,6 @@ export default {
                 numberErrors++
             }
 
-            console.log(numberErrors)
             return numberErrors === 0
         },
         clearAlerts() { // Esvazia os alertas
@@ -254,7 +257,7 @@ export default {
             this.errors = {}
         },
     },
-    emits: ['updateRecords'],
+    emits: ['updateCar', 'updateOwner'],
     components: {InputLabel, Modal, TextInput, InputSuccess, InputError, PrimaryButton}
 
 }

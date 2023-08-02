@@ -38,9 +38,18 @@ class CarController extends Controller
     {
         $car = Car::create($request->validated());
 
-        if($car) return response()->json('Carro inserido', 201);
+        if($car) {
+            return response()->json(
+                [
+                    'content' => [
+                        'car' => $car->load(['brand', 'owner', 'revisions']),
+                        'owner' => $car->owner->load(['cars.brand', 'cars.revisions'])
+                    ],
+                    'message' => 'Carro inserido'
+                ], 201);
+        }
 
-        return response()->json('Erro ao inserir carro');
+        return response()->json(['message' => 'Erro ao inserir carro']);
     }
 
     /**
@@ -89,10 +98,18 @@ class CarController extends Controller
      */
     public function update(UpdateCarRequest $request, Car $car)
     {
-        if($car->update($request->validated()))
-            return response()->json('Carro Alterado', 201);
+        if($car->update($request->validated())) {
+            return response()->json(
+                [
+                    'content' => [
+                        'car' => $car->load(['brand', 'owner', 'revisions']),
+                        'owner' => $car->owner->load(['cars.brand', 'cars.revisions'])
+                    ],
+                    'message' => 'Carro Alterado'
+                ], 201);
+        }
 
-        return response()->json('Erro ao alterar carro');
+        return response()->json(['message' => 'Erro ao alterar carro']);
     }
 
     /**

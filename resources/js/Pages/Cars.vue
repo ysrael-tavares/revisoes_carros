@@ -41,7 +41,7 @@ export default {
         getCars(){ // Metódo para atualizar lista de carros
             if(this.searchingData) return
             this.searchingData = true
-            
+
             axios
                 .get(route('car.all'))
                 .then(response => {
@@ -54,6 +54,12 @@ export default {
         editCar(car){ // Prepara a edição de um carro
             this.car = {...car}
             this.showModal = true
+        },
+        updateCar(carAffected){
+            this.carsList = [
+                ...this.carsList.filter(car => car.id != carAffected.id),
+                carAffected
+            ]
         },
         closeModal(){ // Fecha o modal e esvazia o carro
             this.showModal = false
@@ -141,7 +147,7 @@ export default {
             :owner="car.owner"
             :showModal="showModal"
             :closeModal="closeModal"
-            @updateRecords="getCars"
+            @updateCar="updateCar"
         />
 
         <ModalRevision

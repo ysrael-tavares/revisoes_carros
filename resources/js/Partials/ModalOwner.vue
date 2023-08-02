@@ -177,7 +177,6 @@ export default {
         },
     },
     updated() {
-        console.log(this.presetOwner)
         this.owner = this.presetOwner
         this.clearAlerts()
     },

@@ -335,7 +335,7 @@ export default {
             :showModal="showModalCar"
             :owner="owner"
             :closeModal="closeModalCar"
-            @updateRecords="getOwners"
+            @updateOwner="updateOwner"
         />
         <ModalViewCars
             :showModal="showModalViewCars"
