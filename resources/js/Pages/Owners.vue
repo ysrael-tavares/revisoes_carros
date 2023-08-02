@@ -205,7 +205,10 @@ export default {
                     {
                         label: 'Proprietários(as)',
                         backgroundColor: ['#1E6495', '#FC036C'],
-                        data: [numberMen, numberWomen]
+                        data: [numberMen, numberWomen],
+                        datalabels: {
+                            color: '#FFF'
+                        }
                     }
                 ]
             }
@@ -239,7 +242,10 @@ export default {
                     {
                         label: 'Proprietários',
                         backgroundColor: ['#1E6495'],
-                        data: ageList.map(age => age.count)
+                        data: ageList.map(age => age.count),
+                        datalabels: {
+                            color: '#FFF'
+                        }
                     }
                 ]
             }
@@ -305,6 +311,7 @@ export default {
                             :rows="formatedOwnerList"
                             v-if="typeView == 'all'"
                             :isLoadingData="searchingData"
+                            :title="`Todos os Usuários (${formatedOwnerList.length})`"
                         />
 
                         <PrimaryTable
@@ -312,7 +319,7 @@ export default {
                             v-for="(gender, index) in ownersListBySex[0]"
                             :cols='columns'
                             :rows="returnFormatedRows(gender)"
-                            :title="`${index} - Média de Idade: ${ Math.floor(ownersListBySex[1][index]) } anos`"
+                            :title="`${index} (${gender.length}) - Média de Idade: ${ Math.floor(ownersListBySex[1][index]) } anos`"
                         />
                     </div>
                 </div>
