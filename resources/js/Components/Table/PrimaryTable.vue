@@ -1,5 +1,5 @@
 <template>
-    <div class="my-3">
+    <div class="my-3" v-if="canSearch">
         <TextInput
             v-model="searchText"
             placeholder="Buscar..."
@@ -7,7 +7,7 @@
         />
     </div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-        <h2 class="p-3" v-if="titleTable">{{titleTable}}</h2>
+        <h2 class="p-3" v-if="showTitle">{{titleTable}}</h2>
         <table class="w-full text-sm text-left text-gray-500">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
@@ -81,6 +81,14 @@ export default {
         isLoadingData: {
             type: Boolean,
             default: false
+        },
+        showTitle: {
+            type: Boolean,
+            default: true,
+        },
+        canSearch: {
+            type: Boolean,
+            default: true
         }
     },
     data(){

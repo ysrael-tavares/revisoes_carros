@@ -65,6 +65,7 @@ Route::middleware('auth')->group(callback: function (){
         Route::get('/car', 'index')->name('car.all');
         Route::post('/car', 'store')->name('car.store');
         Route::patch('/car/{car}', 'update')->name('car.update');
+        Route::delete('/car/{car}', 'destroy')->name('car.destroy');
 
         Route::get('/show_by_owners', 'showByOwners')->name('show.by_owners');
         Route::get('/count_by_gender', 'countByGender')->name('show.count_by_gender');

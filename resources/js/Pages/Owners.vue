@@ -17,6 +17,7 @@ import RadarChart from "@/Components/Charts/RadarChart.vue";
 import moment from "moment";
 import ModalRevision from "@/Partials/ModalRevision.vue";
 import ModalViewRevisions from "@/Partials/ModalViewRevisions.vue";
+import ModalDeleteCar from "@/Partials/ModalDeleteCar.vue";
 
 export default {
     data: () => {
@@ -30,6 +31,7 @@ export default {
             showModalViewCars: false,
             showModalRevision: false,
             showModalViewRevisions: false,
+            showModalDeleteCar: false,
             searchingData: false,
             typeView: 'all',
             searchText: "",
@@ -54,6 +56,7 @@ export default {
         LineChart,
         ModalOwner,
         ModalNewCar,
+        ModalDeleteCar,
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
@@ -147,9 +150,6 @@ export default {
                     ]
                 })
         },
-        closeModalViewCar() { // Fecha o modal e esvazia o proprietário
-            this.showModalViewCars = false
-        },
         newRevision(car){
             this.car = {
                 ...car,
@@ -170,10 +170,18 @@ export default {
             this.showModalViewCars = false
             this.showModalViewRevisions = true
         },
-        closeModalViewRevision() { // Fecha o modal e esvazia o proprietário
-            this.showModalViewRevisions = false
-            this.showModalViewCars = true
+        deleteCar(car){
+            this.car = {...car, owner: this.owner}
+
+            this.showModalViewCars = false
+            this.showModalDeleteCar = true
         },
+        deleteCarSuccess(){
+            this.car = {...defaultCar}
+
+            this.showModalViewCars = true
+            this.showModalDeleteCar = false
+        }
     },
     created(){
         this.getOwners()
@@ -182,6 +190,9 @@ export default {
     mounted() {
     },
     computed: {
+        defaultCar() {
+            return defaultCar
+        },
         data() {
             return data
         },
@@ -338,12 +349,20 @@ export default {
             :owner="owner"
             :closeModal="closeModalCar"
             :viewRevisions="newRevision"
+            :deleteCar="deleteCar"
             @updateOwner="updateOwner"
         />
         <ModalRevision
             :showModal="showModalRevision"
             :car="car"
             :closeModal="closeModalRevision"
+            @updateOwner="updateOwner"
+        />
+
+        <ModalDeleteCar
+            :showModal="showModalDeleteCar"
+            :car="car"
+            @deleteCar="deleteCarSuccess"
             @updateOwner="updateOwner"
         />
     </AuthenticatedLayout>

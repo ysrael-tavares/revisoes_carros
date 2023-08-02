@@ -203,7 +203,10 @@ export default {
         showAdditionalTable: {
             type: Boolean,
             default: true
-        }
+        },
+        deleteCar: {
+            type: Function
+        },
     },
     data(){
       return {
@@ -241,6 +244,11 @@ export default {
                                 title: 'Ver Revisões',
                                 classIcon: "fa-solid fa-clipboard-list",
                                 onClick: () => this.viewRevisions(car)
+                            },
+                            {
+                                title: 'Excluir Carro',
+                                classIcon: "fa-solid fa-trash-can",
+                                onClick: () => this.deleteCar(car)
                             }
                         ]
                     }

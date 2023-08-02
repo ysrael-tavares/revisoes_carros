@@ -129,6 +129,27 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
-        //
+        $owner = $car->owner;
+
+        foreach($car->revisions as $revision)
+        {
+            $revision->delete();
+        }
+
+        if($car->delete())
+        {
+            return response()->json([
+                'content' => [
+                    'owner' => $owner->load(['cars.brand', 'cars.revisions']),
+                    'car_id' => $car->id
+                ],
+                'message' => "Carro Excluído"
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Não foi possível excluir o carro'
+        ]);
+
     }
 }
