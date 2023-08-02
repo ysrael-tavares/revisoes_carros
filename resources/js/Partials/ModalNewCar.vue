@@ -221,7 +221,7 @@ export default {
                     this.errors = erro.response.data.errors
                 })
                 .finally(() => {
-                    this.$emit('updateRecord')
+                    this.$emit('updateRecords')
                     this.isLoading = false
                 })
         },
@@ -254,7 +254,7 @@ export default {
             this.errors = {}
         },
     },
-    emits: ['updateRecord'],
+    emits: ['updateRecords'],
     components: {InputLabel, Modal, TextInput, InputSuccess, InputError, PrimaryButton}
 
 }

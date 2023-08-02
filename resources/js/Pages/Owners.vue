@@ -9,7 +9,7 @@ import InputSuccess from "@/Components/InputSuccess.vue";
 import Modal from "@/Components/Modal.vue";
 import ModalNewCar from "@/Partials/ModalNewCar.vue";
 import ModalOwner from "@/Partials/ModalOwner.vue";
-import {defaultCar, ownerDefault} from "@/Utils/Examples.js";
+import {defaultCar, ownerDefault, ownerExample} from "@/Utils/Examples.js";
 import PieChart from '@/Components/Charts/PieChart.vue'
 import LineChart from '@/Components/Charts/LineChart.vue'
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
@@ -22,7 +22,7 @@ import ModalViewRevisions from "@/Partials/ModalViewRevisions.vue";
 export default {
     data: () => {
         return {
-            owner: ownerDefault,
+            owner: {...ownerDefault},
             car: defaultCar,
             ownersList: [],
             ownersListBySex: [],
@@ -78,6 +78,9 @@ export default {
             this.owner = {...owner}
             this.showModal = true
         },
+        clearData(){
+            this.owner = {...ownerDefault}
+        },
         closeModal() { // Fecha o modal e esvazia o proprietário
             this.showModal = false
             this.owner = ownerDefault
@@ -95,7 +98,7 @@ export default {
         },
         newOwner()
         {
-            this.owner = ownerDefault
+            this.owner = {...ownerDefault}
             this.showModal = true
         },
         returnFormatedRows(rows)
@@ -307,8 +310,18 @@ export default {
             </div>
         </div>
 
-        <ModalOwner :showModal="showModal" :closeModal="closeModal" :presetOwner="owner" @updateRecords="getOwners" />
-        <ModalNewCar :showModal="showModalCar" :owner="owner" :closeModal="closeModalCar" @updateRecords="getOwners" />
+        <ModalOwner
+            :showModal="showModal"
+            :closeModal="closeModal"
+            :presetOwner="owner"
+            @clearData="clearData"
+        />
+        <ModalNewCar
+            :showModal="showModalCar"
+            :owner="owner"
+            :closeModal="closeModalCar"
+            @updateRecords="getOwners"
+        />
         <ModalViewCars
             :showModal="showModalViewCars"
             :closeModal="closeModalViewCar"

@@ -157,8 +157,11 @@ export default {
             request
                 .then(response => {
                     this.alert = response.data
-                    this.owner = ownerDefault
-                    setTimeout(this.closeModal, 2000)
+
+                    setTimeout(() => {
+                        this.$emit('clearData')
+                        this.closeModal()
+                    }, 2000)
                 })
                 .catch(erro => {
                     this.errors = erro.response.data.errors
@@ -174,10 +177,11 @@ export default {
         },
     },
     updated() {
+        console.log(this.presetOwner)
         this.owner = this.presetOwner
         this.clearAlerts()
     },
-    emits: ['updateRecords'],
+    emits: ['updateRecords', 'clearData'],
     components: {InputSuccess, InputLabel, PrimaryButton, InputError, Modal, TextInput}
 
 }
