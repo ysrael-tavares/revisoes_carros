@@ -246,6 +246,11 @@ export default {
                                 onClick: () => this.viewRevisions(car)
                             },
                             {
+                                title: 'Editar Carro',
+                                classIcon: "fa-solid fa-pen-to-square",
+                                onClick: () => this.editCar(car)
+                            },
+                            {
                                 title: 'Excluir Carro',
                                 classIcon: "fa-solid fa-trash-can",
                                 onClick: () => this.deleteCar(car)
@@ -328,6 +333,10 @@ export default {
         },
         toggleRegister(){
             this.isRegister = !this.isRegister
+        },
+        editCar(car){
+            this.car = {...car}
+            this.isRegister = true
         }
     },
     emits: ['updateCar', 'updateOwner'],
