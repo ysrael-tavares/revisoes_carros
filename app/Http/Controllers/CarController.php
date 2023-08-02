@@ -15,7 +15,19 @@ class CarController extends Controller
     public function index()
     {
         return response()->json(
-            Car::with(['brand', 'owner', 'revisions'])
+            Car::with(
+                [
+                    'brand',
+                    'revisions',
+                    'owner' => [
+                        'cars' => [
+                                'brand',
+                                'revisions'
+                            ]
+                        ],
+
+                ]
+                )
                 ->get()
                 ->sortBy('owner.name')
                 ->values()

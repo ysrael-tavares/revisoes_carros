@@ -90,6 +90,8 @@ export default {
                 ...this.ownersList.filter(owner => owner.id != ownerAffected.id),
                 ownerAffected
             ]
+
+            if(this.owner.id == ownerAffected.id) this.owner = {...ownerAffected}
         },
         clearData(){
             this.owner = {...ownerDefault}
@@ -134,14 +136,9 @@ export default {
                                     onClick: () => this.editOwner(owner)
                                 },
                                 {
-                                    title: 'Cadastrar Carro',
-                                    classIcon: "fa-solid fa-circle-plus",
-                                    onClick: () => this.newCar(owner)
-                                },
-                                {
-                                    title: 'Ver Carros',
+                                    title: 'Carros',
                                     classIcon: "fa-solid fa-car",
-                                    onClick: () => this.viewCars(owner)
+                                    onClick: () => this.newCar(owner)
                                 },
                             ]
                         }

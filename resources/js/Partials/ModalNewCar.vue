@@ -1,5 +1,5 @@
 <template>
-    <Modal :show="showModal">
+    <Modal :show="showModal" maxWidth="5xl">
         <div class="p-4 sm:p-8 bg-white shadow">
             <header>
                 <h2 class="text-lg font-medium text-gray-900">{{car.id ? "Edição" : "Cadastro"}} de Carros</h2>
@@ -8,17 +8,22 @@
                     Preencha o formulário e {{car.id ? "edite o" : "cadastre um novo"}}  carro
                 </p>
             </header>
-            <form @submit.prevent="sendCar" class="mt-6 space-y-6">
+            <div class="flex justify-between items-center mt-6">
                 <div>
                     <InputLabel for="name" value="Proprietário" />
 
                     <span>
                         {{owner.name}}
                     </span>
-
-                    <InputError class="mt-2" :message="errors.owner_id" />
                 </div>
 
+                <PrimaryButton @click="toggleRegister">
+                    {{isRegister ? "Ocultar Cadastro" : "Cadastrar Carro"}}
+                </PrimaryButton>
+
+                <InputError class="mt-2" :message="errors.owner_id" />
+            </div>
+            <form @submit.prevent="sendCar" class="mt-6 space-y-6" v-if="isRegister">
                 <div>
                     <InputLabel for="brand" value="Marca/Montadora" />
 
@@ -124,18 +129,27 @@
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <PrimaryButton
-                        type="button"
-                        @click="closeModal"
-                        class="bg-red-700 hover:bg-red-600">
-                        Cancelar
-                    </PrimaryButton>
-
                     <PrimaryButton v-if="JSON.stringify(car) !== JSON.stringify(presetCar)" :disabled="isLoading">
                         {{car.id ? "Salvar" : "Cadastrar"}}
                     </PrimaryButton>
                 </div>
             </form>
+            <div class="mt-6 space-y-6">
+                <InputLabel value="Carros" />
+                <PrimaryTable
+                    :cols="['Marca','Modelo','Placa','Cor','Ano de Fabricação', 'Revisões','']"
+                    :rows="formatedCarList"
+                />
+            </div>
+
+            <div class="mt-6">
+                <PrimaryButton
+                    type="button"
+                    @click="closeModal"
+                    class="bg-red-700 hover:bg-red-600">
+                    Fechar
+                </PrimaryButton>
+            </div>
         </div>
     </Modal>
 </template>
@@ -149,6 +163,7 @@ import Modal from "@/Components/Modal.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import {defaultCar} from "@/Utils/Examples.js";
 import { plate } from "@/Utils/regex.js";
+import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 
 export default {
     created(){
@@ -177,11 +192,41 @@ export default {
           car: defaultCar,
           brands: [],
           isLoading: false,
+          isRegister: false,
       }
     },
     updated() {
         this.car = {...this.presetCar}
         this.clearAlerts()
+    },
+    computed:{
+        formatedCarList(){
+            return this.owner.cars?.map(car => {
+                return [
+                    car.brand.name,
+                    car.model,
+                    car.plate,
+                    car.color,
+                    car.year_of_manufacture,
+                    car.revisions.length,
+                    {
+                        type: 'actions',
+                        actions: [
+                            {
+                                title: 'Nova Revisão',
+                                classIcon: "fa-solid fa-circle-plus",
+                                onClick: () => this.newRevision(car)
+                            },
+                            {
+                                title: 'Ver Revisões',
+                                classIcon: "fa-solid fa-clipboard-list",
+                                onClick: () => this.viewRevisions(car)
+                            }
+                        ]
+                    }
+                ]
+            })
+        }
     },
     methods: {
         sendCar() { // Metodo para envio de carro
@@ -216,11 +261,8 @@ export default {
                     this.alert = response.data.message
                     this.car = {...defaultCar}
 
-                    setTimeout(() => {
-                        this.$emit('updateOwner', response.data.content.owner)
-                        this.$emit('updateCar', response.data.content.car)
-                        this.closeModal()
-                    }, 2000)
+                    this.$emit('updateOwner', response.data.content.owner)
+                    this.$emit('updateCar', response.data.content.car)
                 })
                 .catch(erro => {
                     this.errors = erro.response.data.errors
@@ -256,9 +298,12 @@ export default {
             this.alert = ""
             this.errors = {}
         },
+        toggleRegister(){
+            this.isRegister = !this.isRegister
+        }
     },
     emits: ['updateCar', 'updateOwner'],
-    components: {InputLabel, Modal, TextInput, InputSuccess, InputError, PrimaryButton}
+    components: {PrimaryTable, InputLabel, Modal, TextInput, InputSuccess, InputError, PrimaryButton}
 
 }
 </script>
