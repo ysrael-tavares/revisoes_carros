@@ -25,6 +25,7 @@ export default {
             carsList: [],
             showModal: false,
             showModalRevision: false,
+            searchingData: false,
         }
     },
     components: {
@@ -38,10 +39,16 @@ export default {
     },
     methods: {
         getCars(){ // Metódo para atualizar lista de carros
+            if(this.searchingData) return
+            this.searchingData = true
+            
             axios
                 .get(route('car.all'))
                 .then(response => {
                     this.carsList = response.data
+                })
+                .finally(() => {
+                    this.searchingData = false
                 })
         },
         editCar(car){ // Prepara a edição de um carro
@@ -122,6 +129,7 @@ export default {
                         <PrimaryTable
                             :cols="['Marca','Modelo','Placa','Cor','Ano de Fabricação','Proprietário','Revisões','']"
                             :rows="formatedCarList"
+                            :isLoadingData="searchingData"
                         />
 
                     </div>

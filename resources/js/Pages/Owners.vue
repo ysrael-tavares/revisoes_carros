@@ -31,6 +31,7 @@ export default {
             showModalViewCars: false,
             showModalRevision: false,
             showModalViewRevisions: false,
+            searchingData: false,
             typeView: 'all',
             searchText: "",
             grid: null,
@@ -61,10 +62,16 @@ export default {
     },
     methods: {
         getOwners() { // Metódo para atualizar lista de proprietários
+            if(this.searchingData) return
+            this.searchingData = true
+
             axios
                 .get(route('owner.all'))
                 .then(response => {
                     this.ownersList = response.data
+                })
+                .finally(() => {
+                    this.searchingData = false
                 })
         },
         getOwnersBySex() { // Metódo para atualizar lista de proprietários
@@ -296,6 +303,7 @@ export default {
                             :cols='columns'
                             :rows="formatedOwnerList"
                             v-if="typeView == 'all'"
+                            :isLoadingData="searchingData"
                         />
 
                         <PrimaryTable

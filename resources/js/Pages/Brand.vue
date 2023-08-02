@@ -17,6 +17,7 @@ export default {
             alert: "",
             brandsList: [],
             showModal: false,
+            searchingData: false,
         }
     },
     components: {
@@ -57,10 +58,16 @@ export default {
                 })
         },
         getBrands(){ // Metódo para atualizar lista de marcas
+            if(this.searchingData) return
+            this.searchingData = true
+
             axios
                 .get(route('brand.all'))
                 .then(response => {
                     this.brandsList = response.data
+                })
+                .finally(() => {
+                    this.searchingData = false
                 })
         },
         editBrand(brand){ // Prepara a edição de um marca
@@ -137,6 +144,7 @@ export default {
                         <PrimaryTable
                             :cols="['Nome', 'Carros', 'Homens', 'Mulheres', 'Revisões feitas', '']"
                             :rows="formatedBrandList"
+                            :isLoadingData="searchingData"
                         />
 
                     </div>

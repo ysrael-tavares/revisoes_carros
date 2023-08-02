@@ -18,6 +18,7 @@ export default {
             revision: defaultRevision,
             revisionsList: [],
             showModal: false,
+            searchingData: false,
         }
     },
     components: {
@@ -28,11 +29,17 @@ export default {
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
-        getRevisions(){ // Metódo para atualizar lista de revisãos
+        getRevisions(){ // Metódo para atualizar lista de revisões
+            if(this.searchingData) return
+            this.searchingData = true
+
             axios
                 .get(route('revision.all'))
                 .then(response => {
                     this.revisionsList = response.data
+                })
+                .finally(() => {
+                    this.searchingData = false
                 })
         },
         editRevision(revision){ // Prepara a edição de um revisão
@@ -98,6 +105,7 @@ export default {
                         <PrimaryTable
                             :cols="['Data da revisão','Carro','Proprietário','']"
                             :rows="formatedRevisionList"
+                            :isLoadingData="searchingData"
                         />
 
                     </div>

@@ -52,7 +52,7 @@
             </tr>
             <tr v-if="formatedRows.length == 0">
                 <td class="px-6 py-4 text-center" :colspan="cols.length">
-                    Sem Resultados
+                    {{ isLoadingData ? 'Buscando Dados...' : 'Sem Resultados' }}
                 </td>
             </tr>
 
@@ -77,6 +77,10 @@ export default {
         },
         title: {
             type: String,
+        },
+        isLoadingData: {
+            type: Boolean,
+            default: false
         }
     },
     data(){
