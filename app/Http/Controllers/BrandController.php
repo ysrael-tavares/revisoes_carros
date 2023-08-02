@@ -13,7 +13,7 @@ class BrandController extends Controller
     public function index()
     {
         return response()->json(
-            Brand::with('cars')
+            Brand::with(['cars' => ['brand', 'owner']])
                 ->get()
                 ->sortByDesc('number_cars')
                 ->values()
@@ -81,6 +81,28 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        //
+        foreach($brand->cars as $car)
+        {
+            foreach ($car->revisions as $revision)
+            {
+                $revision->delete();
+            }
+
+            $car->delete();
+        }
+
+        if($brand->delete())
+        {
+            return response()->json([
+                'content' => [
+                    'brand_id' => $brand->id,
+                ],
+                'message' => "Marca Excluída"
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Não foi possível excluir a marca'
+        ]);
     }
 }

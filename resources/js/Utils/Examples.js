@@ -26,3 +26,7 @@ export const ownerExample = {
     email: 'ysraeltavares33@gmail.com',
     phone: '83923456789',
 }
+
+export const defaultBrand = {
+    name: ''
+}

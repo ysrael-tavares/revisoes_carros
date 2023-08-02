@@ -60,6 +60,7 @@ Route::middleware('auth')->group(callback: function (){
         Route::get('/brand', 'index')->name('brand.all');
         Route::post('/brand', 'store')->name('brand.store');
         Route::patch('/brand/{brand}', 'update')->name('brand.update');
+        Route::delete('/brand/{brand}', 'destroy')->name('brand.destroy');
     });
 
     Route::controller(CarController::class)->group(function (){

@@ -8,22 +8,26 @@ import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
 import Modal from "@/Components/Modal.vue";
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
+import ModalDeleteBrand from "@/Partials/ModalDeleteBrand.vue";
+import {defaultBrand} from "@/Utils/Examples.js";
 
 export default {
     data: () => {
         return {
-            brand: {name: ''},
+            brand: {...defaultBrand},
             errors: {},
             alert: "",
             brandsList: [],
             showModal: false,
             searchingData: false,
+            showModalDeleteBrand: false,
         }
     },
     components: {
         PrimaryTable,
         Modal,
         InputSuccess,
+        ModalDeleteBrand,
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
@@ -75,9 +79,23 @@ export default {
             this.brand = {...brand}
             this.showModal = true
         },
+        deleteBrand(brand){ // Prepara a edição de um marca
+            this.clearAlerts()
+            this.brand = {...brand}
+            this.showModalDeleteBrand = true
+        },
+        closeModalDeleteBrand(brand_id = null)
+        {
+            this.brand = {...defaultBrand}
+
+            this.brandsList = this.brandsList.filter(brand => brand.id != brand_id)
+
+            this.showModalDeleteBrand = false
+        },
         closeModal(){ // Fecha o modal e esvazia o marca
             this.showModal = false
             this.brand = {name: ""}
+            this.clearAlerts()
         },
         clearAlerts(){ // Esvazia os alertas
             this.alert = ""
@@ -104,6 +122,11 @@ export default {
                                     title: 'Editar Marca',
                                     classIcon: "fa-solid fa-pen-to-square",
                                     onClick: () => this.editBrand(brand)
+                                },
+                                {
+                                    title: 'Excluir Marca',
+                                    classIcon: "fa-solid fa-trash-can",
+                                    onClick: () => this.deleteBrand(brand)
                                 }
                             ]
                         }
@@ -165,14 +188,20 @@ export default {
                     <div>
                         <InputLabel for="name" value="Nome" />
 
-                        <TextInput
-                            id="name"
-                            type="text"
-                            class="mt-1 block w-full"
-                            v-model="brand.name"
-                            required
-                            autofocus
-                        />
+                        <div class="flex items-end">
+                            <TextInput
+                                id="name"
+                                type="text"
+                                class="mt-1 block w-full border-r-0 rounded-r-none"
+                                v-model="brand.name"
+                                maxlength="20"
+                                required
+                            />
+
+                            <span class="py-2 px-3 border border-gray-300 rounded-r-md" title="Caracteres Restantes">
+                                {{20 - brand.name.length}}
+                            </span>
+                        </div>
 
                         <InputError class="mt-2" :message="errors.name" />
                     </div>
@@ -196,5 +225,11 @@ export default {
                 </form>
             </div>
         </Modal>
+        <ModalDeleteBrand
+            :showModal="showModalDeleteBrand"
+            :brand="brand"
+            :closeModal="closeModalDeleteBrand"
+            @deleteBrand="closeModalDeleteBrand"
+        />
     </AuthenticatedLayout>
 </template>
