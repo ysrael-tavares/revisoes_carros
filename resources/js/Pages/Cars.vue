@@ -133,7 +133,7 @@ export default {
             :owner="car.owner"
             :showModal="showModal"
             :closeModal="closeModal"
-            @updateRecord="getCars"
+            @updateRecords="getCars"
         />
 
         <ModalRevision
