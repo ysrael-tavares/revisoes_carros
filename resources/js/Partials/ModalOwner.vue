@@ -48,6 +48,7 @@
                         v-model="owner.gender"
                         required
                     >
+                        <option value="">Selecione o Gênero</option>
                         <option value="Homem">Homem</option>
                         <option value="Mulher">Mulher</option>
                     </select>
@@ -63,6 +64,8 @@
                         type="text"
                         class="mt-1 block w-full"
                         v-model="owner.phone"
+                        v-maska
+                        data-maska="(##) #####-####"
                     />
 
                     <InputError class="mt-2" :message="errors.phone" />
@@ -110,8 +113,10 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
 import {ownerDefault} from "@/Utils/Examples.js";
+import { vMaska } from "maska"
 
 export default {
+    directives: { maska: vMaska },
     data: () => {
         return {
             owner: ownerDefault,
