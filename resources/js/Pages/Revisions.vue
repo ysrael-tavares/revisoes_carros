@@ -12,6 +12,7 @@ import ModalRevision from "@/Partials/ModalRevision.vue";
 import {defaultRevision} from "@/Utils/Examples.js";
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 import ModalDeleteRevision from "@/Partials/ModalDeleteRevision.vue";
+import {mapActions} from "vuex";
 
 export default {
     data: () => {
@@ -32,6 +33,7 @@ export default {
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
+        ...mapActions('revision', ['prepareEditRevision', 'viewRevisions']),
         getRevisions(){ // Metódo para atualizar lista de revisões
             if(this.searchingData) return
             this.searchingData = true
@@ -46,8 +48,8 @@ export default {
                 })
         },
         editRevision(revision){ // Prepara a edição de um revisão
-            this.revision = {...revision}
-            this.showModal = true
+            this.prepareEditRevision(revision)
+            this.viewRevisions(revision.car)
         },
         closeModal(){ // Fecha o modal e esvazia a revisão
             this.showModal = false
@@ -144,10 +146,6 @@ export default {
             </div>
         </div>
         <ModalRevision
-            :car="revision.car"
-            :showModal="showModal"
-            :closeModal="closeModal"
-            :presetRevision="revision"
             @updateRevision="updateRevision"
         />
 
