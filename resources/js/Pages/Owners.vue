@@ -347,13 +347,9 @@ export default {
             @updateOwner="updateOwner"
         />
         <ModalNewCar
-            :viewRevisions="viewRevisions"
             :deleteCar="deleteCar"
         />
         <ModalRevision
-            :showModal="showModalRevision"
-            :car="car"
-            :closeModal="closeModalRevision"
             :deleteRevision="deleteRevision"
             @updateOwner="updateOwner"
         />

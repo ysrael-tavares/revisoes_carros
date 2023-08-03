@@ -180,9 +180,6 @@ export default {
         this.brands = this.$page.props.brands
     },
     props: {
-        viewRevisions: {
-            type: Function
-        },
         showAdditionalTable: {
             type: Boolean,
             default: true
@@ -261,6 +258,7 @@ export default {
             "clearFormCar",
             'updateOwner'
         ]),
+        ...mapActions('revision', ['viewRevisions']),
         sendCar() { // Metodo para envio de carro
             if(this.isLoading) return
 

@@ -1,5 +1,5 @@
 <template>
-    <Modal :show="showModal">
+    <Modal :show="isVisible">
         <div class="p-4 sm:p-8 bg-white shadow">
             <header>
                 <h2 class="text-lg font-medium text-gray-900">{{revision.id ? "Edição" : "Cadastro"}} de Revisão</h2>
@@ -98,7 +98,7 @@
             <div class="mt-6">
                 <InputLabel value="Revisões Cadastradas" />
                 <PrimaryTable
-                    :cols="['Data da revisão','Carro','Proprietário', '']"
+                    :cols="['Data da revisão','Carro', '']"
                     :rows="formatedRevisionList"
                 />
             </div>
@@ -117,24 +117,10 @@ import InputSuccess from "@/Components/InputSuccess.vue";
 import {defaultRevision} from "@/Utils/Examples.js";
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 import moment from "moment";
+import {mapActions} from "vuex";
 
 export default {
     props: {
-        car: {
-            type: Object,
-            default: null,
-        },
-        closeModal: {
-            type: Function,
-        },
-        showModal: {
-            type: Boolean,
-            default: false
-        },
-        presetRevision: {
-            type: Object,
-            default: null,
-        },
         deleteRevision: {
             type: Function,
         },
@@ -149,11 +135,12 @@ export default {
         }
     },
     updated() {
-        this.revision = {...this.presetRevision}
-        this.initialRevision = {...this.presetRevision}
+        this.refreshRevision()
         this.clearAlerts()
     },
     methods:{
+        ...mapActions('revision', ['closeModalRevision', 'prepareEditRevision', 'viewRevisions']),
+        ...mapActions('car', ['updateOwner']),
         sendRevision()
         {
             if(this.isLoading) return
@@ -186,6 +173,9 @@ export default {
                     this.$emit('updateOwner', response.data.content.car.owner)
                     this.$emit('updateCar', response.data.content.car)
                     this.$emit('updateRevision', response.data.content)
+
+                    this.updateOwner(response.data.content.car.owner)
+                    this.viewRevisions(response.data.content.car)
                 })
                 .catch(erro => {
                     console.log(erro)
@@ -200,11 +190,25 @@ export default {
             this.errors = {}
         },
         editRevision(revision){
-            this.revision = {...revision}
-            this.initialRevision = {...this.revision}
+            this.prepareEditRevision(revision)
+            this.refreshRevision()
+        },
+        refreshRevision()
+        {
+            this.revision = this.$store.state.revision.data
+            //this.initialRevision = this.$store.state.revision.data
+        },
+        closeModal(){
+            this.closeModalRevision()
         }
     },
     computed: {
+        car(){
+            return this.$store.state.revision.car
+        },
+        isVisible(){
+            return this.$store.state.revision.showModalInsertUpdate
+        },
         canSave(){
             return JSON.stringify(this.initialRevision) != JSON.stringify(this.revision)
         },
@@ -215,7 +219,6 @@ export default {
                     return [
                         moment(revision.review_day).format('DD/MM/YYYY'),
                         this.carName,
-                        this.car.owner.name,
                         {
                             type: 'actions',
                             actions: [
