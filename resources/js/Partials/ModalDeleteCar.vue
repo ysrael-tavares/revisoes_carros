@@ -1,5 +1,5 @@
 <template>
-    <Modal :show="showModal" maxWidth="5xl">
+    <Modal :show="isVisible" maxWidth="5xl">
         <div class="p-4 sm:p-8 bg-white shadow">
             <header>
                 <h2 class="text-lg font-medium text-gray-900">Exclusão de Carro</h2>
@@ -20,7 +20,7 @@
 
                 <div class="mt-6">
                     <PrimaryTable
-                        :cols="['Data da revisão','Carro','Proprietário']"
+                        :cols="['Data da revisão','Carro']"
                         :rows="formatedRevisionList"
                         :canSearch="false"
                         title="Revisões cadastradas"
@@ -74,6 +74,7 @@ import {defaultCar} from "@/Utils/Examples.js";
 import { plate } from "@/Utils/regex.js";
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 import moment from "moment/moment.js";
+import {mapActions} from "vuex";
 
 export default {
     created(){
@@ -83,12 +84,6 @@ export default {
         showModal: {
             type: Boolean,
             default: false
-        },
-        car: {
-            type: Object
-        },
-        closeModal: {
-            type: Function
         },
     },
     data(){
@@ -105,6 +100,9 @@ export default {
         this.clearAlerts()
     },
     computed:{
+        car(){
+            return this.$store.state.car.data
+        },
         formatedRevisionList()
         {
             return this.car.revisions
@@ -112,7 +110,6 @@ export default {
                     return [
                         moment(revision.review_day).format('DD/MM/YYYY'),
                         this.carName,
-                        this.car.owner.name,
                     ]
                 })
         },
@@ -130,9 +127,13 @@ export default {
         },
         carName(){
             return `${this.car.brand.name} ${this.car.model} ${this.car.year_of_manufacture}`
+        },
+        isVisible() {
+            return this.$store.state.car.showModalDelete
         }
     },
     methods: {
+        ...mapActions('car', ['closeModalDeleteCar', 'updateOwner']),
         deleteCar() { // Metodo para exclusão de carro
             if(this.isLoading) return
 
@@ -144,9 +145,12 @@ export default {
                 .then(response => {
                     this.alert = response.data.message
 
-                    this.$emit('deleteCar', response.data.content.car_id)
-                    this.$emit('updateOwner', response.data.content.owner)
+                    const owner = response.data.content.owner
 
+                    this.$emit('deleteCar', response.data.content.car_id)
+                    this.$emit('updateOwner', owner)
+
+                    this.updateOwner(owner)
                     setTimeout(this.closeModal, 1000)
                 })
                 .catch(erro => {
@@ -159,6 +163,10 @@ export default {
         clearAlerts() { // Esvazia os alertas
             this.alert = ""
             this.errors = {}
+        },
+        closeModal()
+        {
+            this.closeModalDeleteCar()
         },
     },
     emits: ['deleteCar', 'updateOwner'],

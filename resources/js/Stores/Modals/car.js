@@ -3,6 +3,7 @@ import {defaultCar, ownerDefault} from "@/Utils/Examples.js";
 const state = () => ({
     showModalInsertUpdate: false,
     showFormInsertUpdate: false,
+    showModalDelete: false,
     owner: {...ownerDefault},
     data: {...defaultCar},
     list: []
@@ -41,6 +42,15 @@ const actions = {
     clearFormCar({state, commit}){
         commit('updateCar', defaultCar)
     },
+    prepareDeleteCar({state, commit}, car) {
+        if(car.owner) commit('updateOwner', car.owner)
+
+        commit('updateCar', car)
+        commit('showModalDelete')
+    },
+    closeModalDeleteCar({state, commit}){
+        commit('closeModalDelete')
+    },
 }
 
 const mutations = {
@@ -61,7 +71,13 @@ const mutations = {
     },
     updateOwner(state, owner){
         state.owner = {...owner}
-    }
+    },
+    showModalDelete(state){
+        state.showModalDelete = true
+    },
+    closeModalDelete(state){
+        state.showModalDelete = false
+    },
 }
 
 export default {

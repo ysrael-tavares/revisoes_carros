@@ -355,9 +355,6 @@ export default {
         />
 
         <ModalDeleteCar
-            :showModal="showModalDeleteCar"
-            :car="car"
-            :closeModal="closeModalDeleteCar"
             @deleteCar="closeModalDeleteCar"
             @updateOwner="updateOwner"
         />

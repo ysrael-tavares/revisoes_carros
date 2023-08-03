@@ -241,7 +241,7 @@ export default {
                             {
                                 title: 'Excluir Carro',
                                 classIcon: "fa-solid fa-trash-can",
-                                onClick: () => this.deleteCar(car)
+                                onClick: () => this.prepareDeleteCar(car)
                             }
                         ]
                     }
@@ -256,7 +256,8 @@ export default {
             'showFormCar',
             'closeFormCar',
             "clearFormCar",
-            'updateOwner'
+            'updateOwner',
+            'prepareDeleteCar'
         ]),
         ...mapActions('revision', ['viewRevisions']),
         sendCar() { // Metodo para envio de carro

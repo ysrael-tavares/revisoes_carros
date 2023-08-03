@@ -42,7 +42,8 @@ export default {
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
-        ...mapActions('car', ['prepareEditCar']),
+        ...mapActions('car', ['prepareEditCar', 'prepareDeleteCar']),
+        ...mapActions('revision', ['viewRevisions']),
         getCars(){ // Metódo para atualizar lista de carros
             if(this.searchingData) return
             this.searchingData = true
@@ -118,12 +119,12 @@ export default {
                             {
                                 title: 'Nova Revisão',
                                 classIcon: "fa-solid fa-clipboard-list",
-                                onClick: () => this.newRevision(car)
+                                onClick: () => this.viewRevisions(car)
                             },
                             {
                                 title: 'Excluir Carro',
                                 classIcon: "fa-solid fa-trash-can",
-                                onClick: () => this.deleteCar(car)
+                                onClick: () => this.prepareDeleteCar(car)
                             }
                         ]
                     }
@@ -172,16 +173,10 @@ export default {
         />
 
         <ModalRevision
-            :showModal="showModalRevision"
-            :car="car"
-            :closeModal="closeModalRevision"
             @updateCar="updateCar"
         />
 
         <ModalDeleteCar
-            :showModal="showModalDeleteCar"
-            :car="car"
-            :closeModal="closeModalDeleteCar"
             @deleteCar="closeModalDeleteCar"
         />
     </AuthenticatedLayout>
