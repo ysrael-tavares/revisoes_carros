@@ -18,6 +18,7 @@ import ModalViewRevisions from "@/Partials/ModalViewRevisions.vue";
 import ModalDeleteCar from "@/Partials/ModalDeleteCar.vue";
 import ModalDeleteRevision from "@/Partials/ModalDeleteRevision.vue";
 import ModalDeleteOwner from "@/Partials/ModalDeleteOwner.vue";
+import {mapActions} from "vuex";
 
 export default {
     data: () => {
@@ -27,7 +28,6 @@ export default {
             revision: {...defaultRevision},
             ownersList: [],
             ownersListBySex: [],
-            showModal: false,
             showModalCar: false,
             showModalViewCars: false,
             showModalRevision: false,
@@ -65,6 +65,7 @@ export default {
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
+        ...mapActions('owner', ['showModalOwner', 'prepareEditOwner']),
         getOwners() { // Metódo para atualizar lista de proprietários
             if(this.searchingData) return
             this.searchingData = true
@@ -85,10 +86,6 @@ export default {
                     this.ownersListBySex = response.data
                 })
         },
-        editOwner(owner) { // Prepara a edição de um proprietário
-            this.owner = {...owner}
-            this.showModal = true
-        },
         updateOwner(ownerAffected){
             this.ownersList = [
                 ...this.ownersList.filter(owner => owner.id != ownerAffected.id),
@@ -103,13 +100,6 @@ export default {
 
             this.getOwnersBySex()
         },
-        clearData(){
-            this.owner = {...ownerDefault}
-        },
-        closeModal() { // Fecha o modal e esvazia o proprietário
-            this.showModal = false
-            this.owner = ownerDefault
-        },
         newCar(owner) { // Prepara a edição de um proprietário
             this.owner = {...owner}
             this.showModalCar = true
@@ -120,11 +110,6 @@ export default {
         toggleView()
         {
             this.typeView = this.typeView == 'all' ? 'by_sex' : 'all'
-        },
-        newOwner()
-        {
-            this.owner = {...ownerDefault}
-            this.showModal = true
         },
         returnFormatedRows(rows)
         {
@@ -148,7 +133,7 @@ export default {
                                 {
                                     title: 'Editar Proprietário',
                                     classIcon: "fa-solid fa-pen-to-square",
-                                    onClick: () => this.editOwner(owner)
+                                    onClick: () => this.prepareEditOwner(owner)
                                 },
                                 {
                                     title: 'Excluir Proprietário',
@@ -338,7 +323,7 @@ export default {
                                     {{ typeView == 'all' ? 'Classificar por Sexo' : 'Exibição Padrão' }}
                                 </PrimaryButton>
 
-                                <PrimaryButton @click="newOwner" type="button">
+                                <PrimaryButton @click="showModalOwner" type="button">
                                     + Proprietário
                                 </PrimaryButton>
                             </div>
@@ -365,11 +350,7 @@ export default {
         </div>
 
         <ModalOwner
-            :showModal="showModal"
-            :closeModal="closeModal"
-            :presetOwner="owner"
             @updateOwner="updateOwner"
-            @clearData="clearData"
         />
         <ModalNewCar
             :showModal="showModalCar"

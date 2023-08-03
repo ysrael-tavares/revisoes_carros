@@ -1,5 +1,5 @@
 <template>
-    <Modal :show="showModal">
+    <Modal :show="isVisible">
         <div class="p-4 sm:p-8 bg-white shadow">
             <header>
                 <h2 class="text-lg font-medium text-gray-900">{{owner.id ? "Edição" : "Cadastro"}} de Proprietários</h2>
@@ -91,7 +91,7 @@
                 <div class="flex items-center gap-4">
                     <PrimaryButton
                         type="button"
-                        @click="closeModal"
+                        @click="closeModalOwner"
                         class="bg-red-700 hover:bg-red-600">
                         Cancelar
                     </PrimaryButton>
@@ -114,6 +114,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import InputSuccess from "@/Components/InputSuccess.vue";
 import {ownerDefault} from "@/Utils/Examples.js";
 import { vMaska } from "maska"
+import {mapActions} from "vuex";
 
 export default {
     directives: { maska: vMaska },
@@ -126,19 +127,12 @@ export default {
         }
     },
     props: {
-        showModal: {
-            type: Boolean,
-            default: false,
-        },
         closeModal: {
             type: Function,
         },
-        presetOwner: {
-            type: Object,
-            default: null
-        }
     },
     methods: {
+        ...mapActions('owner', ["closeModalOwner"]),
         sendOwner() { // Metodo para envio de proprietário
             if(this.isLoading) return
 
@@ -164,9 +158,8 @@ export default {
                     this.alert = response.data.message
 
                     setTimeout(() => {
-                        this.$emit('clearData')
                         this.$emit('updateOwner', response.data.content)
-                        this.closeModal()
+                        this.closeModalOwner()
                     }, 2000)
                 })
                 .catch(erro => {
@@ -182,10 +175,15 @@ export default {
         },
     },
     updated() {
-        this.owner = this.presetOwner
+        this.owner = this.$store.state.owner.data
         this.clearAlerts()
     },
-    emits: ['updateOwner', 'clearData'],
+    computed: {
+        isVisible(){
+            return this.$store.state.owner.showModalInsertUpdate
+        }
+    },
+    emits: ['updateOwner'],
     components: {InputSuccess, InputLabel, PrimaryButton, InputError, Modal, TextInput}
 
 }
