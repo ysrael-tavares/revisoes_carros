@@ -120,11 +120,6 @@ import moment from "moment";
 import {mapActions} from "vuex";
 
 export default {
-    props: {
-        deleteRevision: {
-            type: Function,
-        },
-    },
     data: () => {
         return {
             errors: {},

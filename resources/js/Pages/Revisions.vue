@@ -19,8 +19,6 @@ export default {
         return {
             revision: {...defaultRevision},
             revisionsList: [],
-            showModal: false,
-            showModalDeleteRevision: false,
             searchingData: false,
         }
     },
@@ -51,10 +49,6 @@ export default {
             this.prepareEditRevision(revision)
             this.viewRevisions(revision.car)
         },
-        closeModal(){ // Fecha o modal e esvazia a revisão
-            this.showModal = false
-            this.revision = {...defaultRevision}
-        },
         updateRevision(revisionAffected)
         {
             this.revisionsList = [
@@ -63,13 +57,6 @@ export default {
             ]
 
             if(this.revision.id == revisionAffected.id) this.revision = {...revisionAffected}
-        },
-        deleteRevision(revision){
-            this.revision = {
-                ...revision,
-            }
-
-            this.showModalDeleteRevision = true
         },
         closeModalDeleteRevision(revision_id = null){
             this.revision = {...defaultRevision}

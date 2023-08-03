@@ -25,9 +25,6 @@ export default {
         return {
             car: {},
             carsList: [],
-            showModal: false,
-            showModalRevision: false,
-            showModalDeleteCar: false,
             searchingData: false,
         }
     },
@@ -57,10 +54,6 @@ export default {
                     this.searchingData = false
                 })
         },
-        editCar(car){ // Prepara a edição de um carro
-            this.car = {...car}
-            this.showModal = true
-        },
         updateCar(carAffected){
             this.carsList = [
                 ...this.carsList.filter(car => car.id != carAffected.id),
@@ -68,23 +61,6 @@ export default {
             ]
 
             if(this.car.id == carAffected.id) this.car = {...carAffected}
-        },
-        closeModal(){ // Fecha o modal e esvazia o carro
-            this.showModal = false
-            this.car = {...defaultCar}
-        },
-        newRevision(car){ // Prepara a edição de um carro
-            this.car = {...car}
-            this.showModalRevision = true
-        },
-        closeModalRevision(){ // Fecha o modal e esvazia o carro
-            this.showModalRevision = false
-            this.car = {...defaultCar}
-        },
-        deleteCar(car){
-            this.car = {...car}
-
-            this.showModalDeleteCar = true
         },
         closeModalDeleteCar(car_id = null){
             this.car = {...defaultCar}

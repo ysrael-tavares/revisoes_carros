@@ -80,12 +80,6 @@ export default {
     created(){
         this.brands = this.$page.props.brands
     },
-    props: {
-        showModal: {
-            type: Boolean,
-            default: false
-        },
-    },
     data(){
       return {
           errors: {},

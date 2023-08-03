@@ -184,9 +184,6 @@ export default {
             type: Boolean,
             default: true
         },
-        deleteCar: {
-            type: Function
-        },
     },
     data(){
       return {

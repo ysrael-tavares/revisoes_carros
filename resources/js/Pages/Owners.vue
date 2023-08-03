@@ -28,11 +28,6 @@ export default {
             revision: {...defaultRevision},
             ownersList: [],
             ownersListBySex: [],
-            showModalViewCars: false,
-            showModalRevision: false,
-            showModalViewRevisions: false,
-            showModalDeleteCar: false,
-            showModalDeleteRevision: false,
             showModalDeleteOwner: false,
             searchingData: false,
             typeView: 'all',
@@ -100,9 +95,6 @@ export default {
 
             this.getOwnersBySex()
         },
-        newCar(owner) { // Prepara a edição de um proprietário
-            this.owner = {...owner}
-        },
         toggleView()
         {
             this.typeView = this.typeView == 'all' ? 'by_sex' : 'all'
@@ -140,45 +132,6 @@ export default {
                         }
                     ]
                 })
-        },
-        closeModalRevision() { // Fecha o modal e esvazia o proprietário
-            this.showModalRevision = false
-        },
-        viewRevisions(car){
-            this.car = {
-                ...car,
-                owner: {...this.owner}
-            }
-            this.showModalRevision = true
-        },
-        deleteCar(car){
-            this.car = {...car, owner: this.owner}
-
-            this.showModalViewCars = false
-            this.showModalDeleteCar = true
-        },
-        closeModalDeleteCar(){
-            this.car = {...defaultCar}
-
-            this.showModalViewCars = true
-            this.showModalDeleteCar = false
-        },
-        deleteRevision(revision){
-            this.revision = {
-                ...revision,
-                car: {
-                    ...this.car
-                }
-            }
-
-            this.showModalRevision = false
-            this.showModalDeleteRevision = true
-        },
-        closeModalDeleteRevision(){
-            this.revision = {...defaultRevision}
-
-            this.showModalRevision = true
-            this.showModalDeleteRevision = false
         },
         deleteOwner(owner)
         {
@@ -346,22 +299,17 @@ export default {
         <ModalOwner
             @updateOwner="updateOwner"
         />
-        <ModalNewCar
-            :deleteCar="deleteCar"
-        />
+        <ModalNewCar />
         <ModalRevision
-            :deleteRevision="deleteRevision"
             @updateOwner="updateOwner"
         />
 
         <ModalDeleteCar
-            @deleteCar="closeModalDeleteCar"
             @updateOwner="updateOwner"
         />
 
         <ModalDeleteRevision
             @updateOwner="updateOwner"
-            @deleteRevision="closeModalDeleteRevision"
         />
 
         <ModalDeleteOwner
