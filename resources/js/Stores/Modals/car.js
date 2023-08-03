@@ -33,6 +33,9 @@ const actions = {
     updateOwner({state, commit}, owner) {
         commit('updateOwner', owner)
     },
+    updateCar({state, commit}, car) {
+        commit('updateCar', car)
+    },
     showFormCar({state, commit}, owner){
         commit('showForm')
     },

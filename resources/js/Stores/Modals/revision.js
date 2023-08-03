@@ -2,6 +2,7 @@ import {defaultCar, defaultRevision} from "@/Utils/Examples.js";
 
 const state = () => ({
     showModalInsertUpdate: false,
+    showModalDelete: false,
     car: {...defaultCar},
     data: {...defaultRevision},
     list: []
@@ -31,6 +32,13 @@ const actions = {
     updateRevision({state, commit}, revision) {
         commit('updateRevision', revision)
     },
+    prepareDeleteRevision({state, commit}, revision) {
+        commit('updateRevision', revision)
+        commit('showDeleteModal')
+    },
+    closeDeleteModal({state, commit}){
+        commit('closeDeleteModal')
+    },
 }
 
 const mutations = {
@@ -45,6 +53,12 @@ const mutations = {
     },
     updateCar(state, car){
         state.car = {...car}
+    },
+    showDeleteModal(state){
+        state.showModalDelete = true
+    },
+    closeDeleteModal(state){
+        state.showModalDelete = false
     },
 }
 

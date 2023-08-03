@@ -360,9 +360,6 @@ export default {
         />
 
         <ModalDeleteRevision
-            :showModal="showModalDeleteRevision"
-            :revision="revision"
-            :closeModal="closeModalDeleteRevision"
             @updateOwner="updateOwner"
             @deleteRevision="closeModalDeleteRevision"
         />

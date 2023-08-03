@@ -33,7 +33,7 @@ export default {
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
-        ...mapActions('revision', ['prepareEditRevision', 'viewRevisions']),
+        ...mapActions('revision', ['prepareEditRevision', 'viewRevisions', 'prepareDeleteRevision']),
         getRevisions(){ // Metódo para atualizar lista de revisões
             if(this.searchingData) return
             this.searchingData = true
@@ -102,7 +102,7 @@ export default {
                                 {
                                     title: 'Excluir Revisão',
                                     classIcon: "fa-solid fa-trash-can",
-                                    onClick: () => this.deleteRevision(revision)
+                                    onClick: () => this.prepareDeleteRevision(revision)
                                 }
                             ]
                         }
@@ -150,9 +150,6 @@ export default {
         />
 
         <ModalDeleteRevision
-            :showModal="showModalDeleteRevision"
-            :revision="revision"
-            :closeModal="closeModalDeleteRevision"
             @deleteRevision="closeModalDeleteRevision"
         />
     </AuthenticatedLayout>

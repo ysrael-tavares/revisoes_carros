@@ -1,5 +1,5 @@
 <template>
-    <Modal :show="showModal" maxWidth="5xl">
+    <Modal :show="isVisible" maxWidth="5xl">
         <div class="p-4 sm:p-8 bg-white shadow">
             <header>
                 <h2 class="text-lg font-medium text-gray-900">Exclusão de Revisão</h2>
@@ -9,16 +9,7 @@
                 </p>
             </header>
             <form @submit.prevent="deleteRevision" class="mt-6 space-y-6">
-                <div class="mt-6">
-                    <PrimaryTable
-                        :cols="['Data da revisão','Carro','Proprietário']"
-                        :rows="formatedRevision"
-                        title="Revisão"
-                        :canSearch="false"
-                    />
-                </div>
-
-                <div class="flex items-center space-x-3">
+                                <div class="flex items-center space-x-3">
                     <input
                         type="checkbox"
                         class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
@@ -28,7 +19,7 @@
                     />
 
                     <span>
-                        Estou ciente da exclusão dos dados listados acima.
+                        Estou ciente da exclusão da revisão do dia {{ dayRevision }}.
                     </span>
                 </div>
 
@@ -39,7 +30,7 @@
                 <div class="flex items-center gap-4">
                     <PrimaryButton
                         type="button"
-                        @click="closeModal"
+                        @click="closeDeleteModal"
                         class="bg-red-700 hover:bg-red-600">
                         Cancelar
                     </PrimaryButton>
@@ -65,20 +56,9 @@ import {defaultCar} from "@/Utils/Examples.js";
 import { plate } from "@/Utils/regex.js";
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 import moment from "moment/moment.js";
+import {mapActions} from "vuex";
 
 export default {
-    props: {
-        showModal: {
-            type: Boolean,
-            default: false
-        },
-        revision: {
-            type: Object
-        },
-        closeModal: {
-            type: Function
-        },
-    },
     data(){
       return {
           errors: {},
@@ -93,6 +73,12 @@ export default {
         this.clearAlerts()
     },
     computed:{
+        revision(){
+            return this.$store.state.revision.data
+        },
+        isVisible(){
+            return this.$store.state.revision.showModalDelete
+        },
         formatedRevision()
         {
             return [
@@ -105,9 +91,14 @@ export default {
         },
         carName(){
             return `${this.revision.car.brand.name} ${this.revision.car.model} ${this.revision.car.year_of_manufacture}`
+        },
+        dayRevision(){
+            return moment(this.revision.review_day).format('DD/MM/YYYY')
         }
     },
     methods: {
+        ...mapActions('revision', ['closeDeleteModal', 'viewRevisions']),
+        ...mapActions('car', ['updateOwner', "updateCar"]),
         deleteRevision() { // Metodo para exclusão de revisão
             if(this.isLoading) return
 
@@ -119,8 +110,23 @@ export default {
                 .then(response => {
                     this.alert = response.data.message
 
+                    this.closeDeleteModal()
+
                     this.$emit('deleteRevision', response.data.content.revision_id)
                     this.$emit('updateOwner', response.data.content.owner)
+
+                    const car = this.$store.state.revision.car
+
+                    const updatedCar = {
+                        ...car,
+                        revisions: car.revisions.filter(rev => rev.id != response.data.content.revision_id)
+                    }
+
+                    this.updateOwner(response.data.content.owner)
+                    this.updateCar(updatedCar)
+                    this.viewRevisions(updatedCar)
+
+
                 })
                 .catch(erro => {
                     this.errors = erro.response.data.errors

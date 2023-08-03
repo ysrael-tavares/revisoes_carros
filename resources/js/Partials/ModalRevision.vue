@@ -139,7 +139,7 @@ export default {
         this.clearAlerts()
     },
     methods:{
-        ...mapActions('revision', ['closeModalRevision', 'prepareEditRevision', 'viewRevisions']),
+        ...mapActions('revision', ['closeModalRevision', 'prepareEditRevision', 'viewRevisions', 'prepareDeleteRevision']),
         ...mapActions('car', ['updateOwner']),
         sendRevision()
         {
@@ -230,7 +230,7 @@ export default {
                                 {
                                     title: 'Excluir Revisão',
                                     classIcon: "fa-solid fa-trash-can",
-                                    onClick: () => this.deleteRevision(revision)
+                                    onClick: () => this.prepareDeleteRevision(revision)
                                 },
                             ]
                         }
