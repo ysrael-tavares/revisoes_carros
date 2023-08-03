@@ -23,6 +23,8 @@ const actions = {
         commit('closeForm')
     },
     prepareEditCar({state, commit}, car) {
+        if(car.owner) commit('updateOwner', car.owner)
+
         commit('updateCar', car)
         commit('showModal')
         commit('showForm')

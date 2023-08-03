@@ -13,6 +13,7 @@ import {defaultCar} from "@/Utils/Examples.js";
 import ModalRevision from "@/Partials/ModalRevision.vue";
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
 import ModalDeleteCar from "@/Partials/ModalDeleteCar.vue";
+import {mapActions} from "vuex";
 
 export default {
     props:{
@@ -41,6 +42,7 @@ export default {
         AuthenticatedLayout, Head, Link, PrimaryButton, InputError, TextInput, InputLabel
     },
     methods: {
+        ...mapActions('car', ['prepareEditCar']),
         getCars(){ // Metódo para atualizar lista de carros
             if(this.searchingData) return
             this.searchingData = true
@@ -111,7 +113,7 @@ export default {
                             {
                                 title: 'Editar Carro',
                                 classIcon: "fa-solid fa-pen-to-square",
-                                onClick: () => this.editCar(car)
+                                onClick: () => this.prepareEditCar(car)
                             },
                             {
                                 title: 'Nova Revisão',
@@ -165,11 +167,6 @@ export default {
             </div>
         </div>
         <ModalNewCar
-            :presetCar="car"
-            :owner="car.owner"
-            :showModal="showModal"
-            :closeModal="closeModal"
-            :defaultShowRegister="true"
             :showAdditionalTable="false"
             @updateCar="updateCar"
         />

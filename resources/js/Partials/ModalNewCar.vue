@@ -201,6 +201,7 @@ export default {
       }
     },
     updated() {
+        this.refreshCar()
         this.clearAlerts()
     },
     computed:{
@@ -269,8 +270,6 @@ export default {
 
             this.car.owner_id = this.$store.state.car.owner.id
 
-            console.log(this.car)
-
             if(!this.validateData()) {
                 this.isLoading = false
                 return
@@ -295,7 +294,9 @@ export default {
                     this.car = {...defaultCar}
 
                     this.updateOwner(response.data.content.owner)
+                    this.$emit('updateCar', response.data.content.car)
                     this.clearFormCar()
+                    if(!this.showAdditionalTable) this.closeModalCar()
                 })
                 .catch(erro => {
                     this.errors = erro.response.data.errors
