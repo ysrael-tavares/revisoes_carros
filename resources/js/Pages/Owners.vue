@@ -28,7 +28,6 @@ export default {
             revision: {...defaultRevision},
             ownersList: [],
             ownersListBySex: [],
-            showModalCar: false,
             showModalViewCars: false,
             showModalRevision: false,
             showModalViewRevisions: false,
@@ -66,6 +65,7 @@ export default {
     },
     methods: {
         ...mapActions('owner', ['showModalOwner', 'prepareEditOwner']),
+        ...mapActions('car', ['showModalCar', 'prepareEditCar']),
         getOwners() { // Metódo para atualizar lista de proprietários
             if(this.searchingData) return
             this.searchingData = true
@@ -102,10 +102,6 @@ export default {
         },
         newCar(owner) { // Prepara a edição de um proprietário
             this.owner = {...owner}
-            this.showModalCar = true
-        },
-        closeModalCar() { // Fecha o modal e esvazia o proprietário
-            this.showModalCar = false
         },
         toggleView()
         {
@@ -128,7 +124,7 @@ export default {
                                 {
                                     title: 'Carros',
                                     classIcon: "fa-solid fa-car",
-                                    onClick: () => this.newCar(owner)
+                                    onClick: () => this.showModalCar(owner)
                                 },
                                 {
                                     title: 'Editar Proprietário',
@@ -147,14 +143,12 @@ export default {
         },
         closeModalRevision() { // Fecha o modal e esvazia o proprietário
             this.showModalRevision = false
-            this.showModalCar = true
         },
         viewRevisions(car){
             this.car = {
                 ...car,
                 owner: {...this.owner}
             }
-            this.showModalCar = false
             this.showModalRevision = true
         },
         deleteCar(car){
@@ -353,12 +347,8 @@ export default {
             @updateOwner="updateOwner"
         />
         <ModalNewCar
-            :showModal="showModalCar"
-            :owner="owner"
-            :closeModal="closeModalCar"
             :viewRevisions="viewRevisions"
             :deleteCar="deleteCar"
-            @updateOwner="updateOwner"
         />
         <ModalRevision
             :showModal="showModalRevision"

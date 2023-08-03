@@ -1,5 +1,5 @@
 <template>
-    <Modal :show="showModal" maxWidth="5xl">
+    <Modal :show="isVisible" maxWidth="5xl">
         <div class="p-4 sm:p-8 bg-white shadow">
             <header>
                 <h2 class="text-lg font-medium text-gray-900">{{car.id ? "Edição" : "Cadastro"}} de Carros</h2>
@@ -23,7 +23,7 @@
 
                 <InputError class="mt-2" :message="errors.owner_id" />
             </div>
-            <form @submit.prevent="sendCar" class="mt-6 space-y-6" v-if="isRegister">
+            <form @submit.prevent="sendCar" class="mt-6 space-y-6" v-if="isFormVisible">
                 <div>
                     <InputLabel for="brand" value="Marca/Montadora" />
 
@@ -137,7 +137,7 @@
                         Cancelar
                     </PrimaryButton>
 
-                    <PrimaryButton v-if="JSON.stringify(car) !== JSON.stringify(presetCar)" :disabled="isLoading">
+                    <PrimaryButton v-if="JSON.stringify(car)" :disabled="isLoading">
                         {{car.id ? "Salvar" : "Cadastrar"}}
                     </PrimaryButton>
                 </div>
@@ -173,32 +173,15 @@ import InputLabel from "@/Components/InputLabel.vue";
 import {defaultCar} from "@/Utils/Examples.js";
 import { plate } from "@/Utils/regex.js";
 import PrimaryTable from "@/Components/Table/PrimaryTable.vue";
+import {mapActions, mapState} from "vuex";
 
 export default {
     created(){
         this.brands = this.$page.props.brands
     },
     props: {
-        presetCar: {
-            type: Object,
-            default: defaultCar
-        },
-        showModal: {
-            type: Boolean,
-            default: false
-        },
-        owner: {
-            type: Object
-        },
-        closeModal: {
-            type: Function
-        },
         viewRevisions: {
             type: Function
-        },
-        defaultShowRegister: {
-            type: Boolean,
-            default: false
         },
         showAdditionalTable: {
             type: Boolean,
@@ -215,21 +198,28 @@ export default {
           car: defaultCar,
           brands: [],
           isLoading: false,
-          isRegister: this.defaultShowRegister,
       }
     },
     updated() {
-        this.car = {...this.presetCar}
         this.clearAlerts()
     },
     computed:{
+        owner(){
+            return this.$store.state.car.owner
+        },
+        isVisible(){
+            return this.$store.state.car.showModalInsertUpdate
+        },
+        isFormVisible(){
+            return this.$store.state.car.showFormInsertUpdate
+        },
         textButton(){
-            return this.isRegister
+            return this.isFormVisible
                 ? "Ocultar " : "Exibir " + (this.car.id ? "Edição" : "Cadastro")
 
         },
         formatedCarList(){
-            return this.owner.cars?.map(car => {
+            return this.$store.state.car.owner.cars?.map(car => {
                 return [
                     car.brand.name,
                     car.model,
@@ -262,6 +252,14 @@ export default {
         }
     },
     methods: {
+        ...mapActions('car', [
+            'closeModalCar',
+            'prepareEditCar',
+            'showFormCar',
+            'closeFormCar',
+            "clearFormCar",
+            'updateOwner'
+        ]),
         sendCar() { // Metodo para envio de carro
             if(this.isLoading) return
 
@@ -269,7 +267,9 @@ export default {
 
             this.clearAlerts()
 
-            this.car.owner_id = this.owner.id
+            this.car.owner_id = this.$store.state.car.owner.id
+
+            console.log(this.car)
 
             if(!this.validateData()) {
                 this.isLoading = false
@@ -294,8 +294,8 @@ export default {
                     this.alert = response.data.message
                     this.car = {...defaultCar}
 
-                    this.$emit('updateOwner', response.data.content.owner)
-                    this.$emit('updateCar', response.data.content.car)
+                    this.updateOwner(response.data.content.owner)
+                    this.clearFormCar()
                 })
                 .catch(erro => {
                     this.errors = erro.response.data.errors
@@ -332,11 +332,20 @@ export default {
             this.errors = {}
         },
         toggleRegister(){
-            this.isRegister = !this.isRegister
+            this.isFormVisible ? this.closeFormCar() : this.showFormCar()
         },
         editCar(car){
-            this.car = {...car}
-            this.isRegister = true
+            this.prepareEditCar(car)
+            this.refreshCar()
+        },
+        refreshCar()
+        {
+            this.car = this.$store.state.car.data
+        },
+        closeModal()
+        {
+            this.closeModalCar()
+            this.refreshCar()
         }
     },
     emits: ['updateCar', 'updateOwner'],
