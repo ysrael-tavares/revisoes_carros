@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('revisions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Car::class);
+            $table->foreignId('car_id')->constrained()->onDelete('cascade');
             $table->date('review_day');
             $table->timestamps();
         });

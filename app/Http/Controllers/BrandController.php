@@ -81,15 +81,21 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        foreach($brand->cars as $car)
-        {
-            foreach ($car->revisions as $revision)
+        /**
+         * Código removido devido mal uso do ForEach
+         *
+         * Código para deletar registros em cascata foi adicionado nas migrations
+         *
+            foreach($brand->cars as $car)
             {
-                $revision->delete();
+                foreach ($car->revisions as $revision)
+                {
+                    $revision->delete();
+                }
+    
+                $car->delete();
             }
-
-            $car->delete();
-        }
+         */
 
         if($brand->delete())
         {

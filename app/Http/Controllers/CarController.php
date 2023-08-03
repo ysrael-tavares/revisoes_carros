@@ -131,10 +131,16 @@ class CarController extends Controller
     {
         $owner = $car->owner;
 
-        foreach($car->revisions as $revision)
-        {
-            $revision->delete();
-        }
+        /**
+         * Código removido devido mal uso do ForEach
+         *
+         * Código para deletar registros em cascata foi adicionado nas migrations
+         *
+            foreach($car->revisions as $revision)
+            {
+                $revision->delete();
+            }
+         */
 
         if($car->delete())
         {

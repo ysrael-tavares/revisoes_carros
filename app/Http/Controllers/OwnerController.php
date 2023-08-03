@@ -99,15 +99,21 @@ class OwnerController extends Controller
      */
     public function destroy(Owner $owner)
     {
-        foreach($owner->cars as $car)
-        {
-            foreach ($car->revisions as $revision)
+        /**
+         * Código removido devido mal uso do ForEach
+         *
+         * Código para deletar registros em cascata foi adicionado nas migrations
+         *
+            foreach($owner->cars as $car)
             {
-                $revision->delete();
-            }
+                foreach ($car->revisions as $revision)
+                {
+                    $revision->delete();
+                }
 
-            $car->delete();
-        }
+                $car->delete();
+            }
+         */
 
         if($owner->delete())
         {
